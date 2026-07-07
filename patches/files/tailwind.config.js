@@ -7,6 +7,12 @@ module.exports = {
     './app/**/*.{js,jsx}',
     './src/**/*.{js,jsx}',
   ],
+  safelist: [
+    // Dynamic accent classes used with template strings - keep them from being purged
+    'icon-emerald', 'icon-purple', 'icon-amber', 'icon-cyan', 'icon-pink', 'icon-blue',
+    'badge-emerald', 'badge-purple', 'badge-amber', 'badge-cyan', 'badge-pink', 'badge-blue',
+    'text-brand-emerald', 'text-brand-purple', 'text-brand-amber', 'text-brand-cyan', 'text-brand-pink', 'text-brand-blue',
+  ],
   prefix: "",
   theme: {
     container: {

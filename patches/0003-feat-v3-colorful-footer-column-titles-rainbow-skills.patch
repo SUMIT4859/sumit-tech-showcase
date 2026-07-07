@@ -1,0 +1,117 @@
+From 674575aa69032f9e834e5d8b7160264e7b0c13fe Mon Sep 17 00:00:00 2001
+From: Sumitkumar Pandit <hello@codedbysumit.com>
+Date: Tue, 7 Jul 2026 06:55:57 +0000
+Subject: [PATCH 3/3] feat(v3): colorful footer column titles + rainbow skills
+ + tailwind safelist
+
+- Footer column titles are now colored:
+  EXPLORE (emerald), RESOURCES (purple), LEGAL (amber), SOCIAL (cyan)
+- Portfolio Skills section: each group card gets its own accent color
+  (Frontend=emerald, Backend=purple, Databases=amber, Programming=cyan,
+  DevTools=pink, AI=blue, Web3=emerald). Section number badges match.
+  Skill pills use badge-{color} tinted style instead of monochrome.
+- tailwind.config.js safelist: prevents purge of dynamic icon-{color},
+  badge-{color}, text-brand-{color} classes. Fixes 5th free-tool tile
+  (Email Header Analyzer) that was previously rendering without its
+  gradient icon container.
+---
+ app/portfolio/page.js | 14 +++++++++-----
+ components/Footer.jsx |  8 ++++----
+ tailwind.config.js    |  6 ++++++
+ 3 files changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/app/portfolio/page.js b/app/portfolio/page.js
+index 482a1cd..18dfc12 100644
+--- a/app/portfolio/page.js
++++ b/app/portfolio/page.js
+@@ -199,21 +199,25 @@ function Skills() {
+       <div className="container">
+         <SectionTitle eyebrow="Skills" title="The toolkit behind the work." sub="A curated stack honed through shipping real products across web, AI and Web3." />
+         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+-          {SKILL_GROUPS.map((g, i) => (
++          {SKILL_GROUPS.map((g, i) => {
++            const ACC = ['emerald', 'purple', 'amber', 'cyan', 'pink', 'blue'];
++            const acc = ACC[i % ACC.length];
++            return (
+             <Reveal key={g.name} delay={i * 0.05}>
+               <div className="group glass-card rounded-2xl p-6 h-full hover:bg-accent/50 transition-all duration-500 hover:-translate-y-1">
+                 <div className="flex items-center justify-between mb-5">
+-                  <h3 className="font-display text-lg font-semibold">{g.name}</h3>
+-                  <span className="font-mono text-xs text-muted-foreground">0{i + 1}</span>
++                  <h3 className="font-display text-lg font-semibold" style={{ color: `hsl(var(--brand-${acc}))` }}>{g.name}</h3>
++                  <span className={`font-mono text-xs px-2 py-0.5 rounded-full badge-${acc}`}>0{i + 1}</span>
+                 </div>
+                 <div className="flex flex-wrap gap-2">
+                   {g.items.map(item => (
+-                    <span key={item} className="text-xs px-3 py-1.5 rounded-full border border-border bg-background/50 group-hover:border-foreground/30 transition-colors">{item}</span>
++                    <span key={item} className={`text-xs px-3 py-1.5 rounded-full border transition-colors badge-${acc}`}>{item}</span>
+                   ))}
+                 </div>
+               </div>
+             </Reveal>
+-          ))}
++            );
++          })}
+         </div>
+       </div>
+     </section>
+diff --git a/components/Footer.jsx b/components/Footer.jsx
+index b6e699b..76b9205 100644
+--- a/components/Footer.jsx
++++ b/components/Footer.jsx
+@@ -43,7 +43,7 @@ export default function Footer() {
+           </div>
+           <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-8">
+             <div>
+-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Explore</p>
++              <p className="text-xs uppercase tracking-widest mb-4 font-semibold" style={{ color: 'hsl(var(--brand-emerald))' }}>Explore</p>
+               <ul className="space-y-2.5 text-sm">
+                 <li><Link href="/#about" className="hover:text-foreground text-muted-foreground transition">About</Link></li>
+                 <li><Link href="/#projects" className="hover:text-foreground text-muted-foreground transition">Projects</Link></li>
+@@ -53,7 +53,7 @@ export default function Footer() {
+               </ul>
+             </div>
+             <div>
+-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Resources</p>
++              <p className="text-xs uppercase tracking-widest mb-4 font-semibold" style={{ color: 'hsl(var(--brand-purple))' }}>Resources</p>
+               <ul className="space-y-2.5 text-sm">
+                 <li><Link href="/free-tools" className="hover:text-foreground text-muted-foreground transition">Free Tools</Link></li>
+                 <li><Link href="/templates" className="hover:text-foreground text-muted-foreground transition">Templates</Link></li>
+@@ -63,7 +63,7 @@ export default function Footer() {
+               </ul>
+             </div>
+             <div>
+-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Legal</p>
++              <p className="text-xs uppercase tracking-widest mb-4 font-semibold" style={{ color: 'hsl(var(--brand-amber))' }}>Legal</p>
+               <ul className="space-y-2.5 text-sm">
+                 <li><Link href="/privacy-policy" className="hover:text-foreground text-muted-foreground transition inline-flex items-center gap-1.5"><Shield className="h-3 w-3" /> Privacy Policy</Link></li>
+                 <li><Link href="/terms" className="hover:text-foreground text-muted-foreground transition inline-flex items-center gap-1.5"><FileText className="h-3 w-3" /> Terms of Service</Link></li>
+@@ -72,7 +72,7 @@ export default function Footer() {
+               </ul>
+             </div>
+             <div>
+-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Social</p>
++              <p className="text-xs uppercase tracking-widest mb-4 font-semibold" style={{ color: 'hsl(var(--brand-cyan))' }}>Social</p>
+               <ul className="space-y-2.5 text-sm">
+                 <li><a href="https://github.com/SUMIT4859" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">GitHub <ArrowUpRight className="h-3 w-3" /></a></li>
+                 <li><a href="https://www.linkedin.com/in/sumit-kumar4859" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">LinkedIn <ArrowUpRight className="h-3 w-3" /></a></li>
+diff --git a/tailwind.config.js b/tailwind.config.js
+index bf4443f..50e0d1a 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -7,6 +7,12 @@ module.exports = {
+     './app/**/*.{js,jsx}',
+     './src/**/*.{js,jsx}',
+   ],
++  safelist: [
++    // Dynamic accent classes used with template strings - keep them from being purged
++    'icon-emerald', 'icon-purple', 'icon-amber', 'icon-cyan', 'icon-pink', 'icon-blue',
++    'badge-emerald', 'badge-purple', 'badge-amber', 'badge-cyan', 'badge-pink', 'badge-blue',
++    'text-brand-emerald', 'text-brand-purple', 'text-brand-amber', 'text-brand-cyan', 'text-brand-pink', 'text-brand-blue',
++  ],
+   prefix: "",
+   theme: {
+     container: {
+-- 
+2.39.5
+

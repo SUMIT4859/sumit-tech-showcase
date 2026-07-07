@@ -43,7 +43,7 @@ export default function Footer() {
           </div>
           <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-8">
             <div>
-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Explore</p>
+              <p className="text-xs uppercase tracking-widest mb-4 font-semibold" style={{ color: 'hsl(var(--brand-emerald))' }}>Explore</p>
               <ul className="space-y-2.5 text-sm">
                 <li><Link href="/#about" className="hover:text-foreground text-muted-foreground transition">About</Link></li>
                 <li><Link href="/#projects" className="hover:text-foreground text-muted-foreground transition">Projects</Link></li>
@@ -53,7 +53,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Resources</p>
+              <p className="text-xs uppercase tracking-widest mb-4 font-semibold" style={{ color: 'hsl(var(--brand-purple))' }}>Resources</p>
               <ul className="space-y-2.5 text-sm">
                 <li><Link href="/free-tools" className="hover:text-foreground text-muted-foreground transition">Free Tools</Link></li>
                 <li><Link href="/templates" className="hover:text-foreground text-muted-foreground transition">Templates</Link></li>
@@ -63,7 +63,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Legal</p>
+              <p className="text-xs uppercase tracking-widest mb-4 font-semibold" style={{ color: 'hsl(var(--brand-amber))' }}>Legal</p>
               <ul className="space-y-2.5 text-sm">
                 <li><Link href="/privacy-policy" className="hover:text-foreground text-muted-foreground transition inline-flex items-center gap-1.5"><Shield className="h-3 w-3" /> Privacy Policy</Link></li>
                 <li><Link href="/terms" className="hover:text-foreground text-muted-foreground transition inline-flex items-center gap-1.5"><FileText className="h-3 w-3" /> Terms of Service</Link></li>
@@ -72,7 +72,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Social</p>
+              <p className="text-xs uppercase tracking-widest mb-4 font-semibold" style={{ color: 'hsl(var(--brand-cyan))' }}>Social</p>
               <ul className="space-y-2.5 text-sm">
                 <li><a href="https://github.com/SUMIT4859" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">GitHub <ArrowUpRight className="h-3 w-3" /></a></li>
                 <li><a href="https://www.linkedin.com/in/sumit-kumar4859" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">LinkedIn <ArrowUpRight className="h-3 w-3" /></a></li>

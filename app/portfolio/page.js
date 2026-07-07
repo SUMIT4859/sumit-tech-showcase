@@ -199,21 +199,25 @@ function Skills() {
       <div className="container">
         <SectionTitle eyebrow="Skills" title="The toolkit behind the work." sub="A curated stack honed through shipping real products across web, AI and Web3." />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {SKILL_GROUPS.map((g, i) => (
+          {SKILL_GROUPS.map((g, i) => {
+            const ACC = ['emerald', 'purple', 'amber', 'cyan', 'pink', 'blue'];
+            const acc = ACC[i % ACC.length];
+            return (
             <Reveal key={g.name} delay={i * 0.05}>
               <div className="group glass-card rounded-2xl p-6 h-full hover:bg-accent/50 transition-all duration-500 hover:-translate-y-1">
                 <div className="flex items-center justify-between mb-5">
-                  <h3 className="font-display text-lg font-semibold">{g.name}</h3>
-                  <span className="font-mono text-xs text-muted-foreground">0{i + 1}</span>
+                  <h3 className="font-display text-lg font-semibold" style={{ color: `hsl(var(--brand-${acc}))` }}>{g.name}</h3>
+                  <span className={`font-mono text-xs px-2 py-0.5 rounded-full badge-${acc}`}>0{i + 1}</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {g.items.map(item => (
-                    <span key={item} className="text-xs px-3 py-1.5 rounded-full border border-border bg-background/50 group-hover:border-foreground/30 transition-colors">{item}</span>
+                    <span key={item} className={`text-xs px-3 py-1.5 rounded-full border transition-colors badge-${acc}`}>{item}</span>
                   ))}
                 </div>
               </div>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
