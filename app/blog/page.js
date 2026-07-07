@@ -29,7 +29,7 @@ export default function BlogIndex() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-purple text-xs font-mono uppercase tracking-widest mb-6">
               <Sparkles className="h-3 w-3" /> The Journal
             </div>
-            <h1 className="font-display text-5xl md:text-7xl font-semibold tracking-tight gradient-text">Writing on craft.</h1>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight gradient-text break-words">Writing on craft.</h1>
             <p className="mt-5 text-lg text-muted-foreground max-w-2xl">Notes on AI engineering, Web3, Next.js, the email stack, and the craft of shipping software that lasts.</p>
           </motion.div>
 

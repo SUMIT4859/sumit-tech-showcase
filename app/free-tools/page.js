@@ -29,7 +29,7 @@ export default function FreeToolsPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-amber text-xs font-mono uppercase tracking-widest mb-6">
               <Wrench className="h-3 w-3" /> Free Tools
             </div>
-            <h1 className="font-display text-5xl md:text-7xl font-semibold tracking-tight gradient-text">Tools that ship faster.</h1>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight gradient-text break-words">Tools that ship faster.</h1>
             <p className="mt-5 text-lg md:text-xl text-muted-foreground max-w-2xl">Free, fast, no signup. Built for email senders who want answers in seconds, not signups.</p>
           </div>
         </div>

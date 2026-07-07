@@ -1,7 +1,7 @@
 From 4240f84679108340d2f610a1403973d749844203 Mon Sep 17 00:00:00 2001
 From: Sumitkumar Pandit <hello@codedbysumit.com>
 Date: Tue, 7 Jul 2026 06:17:40 +0000
-Subject: [PATCH 2/3] feat(v2): colorful sub-pages + Brevo screenshots section
+Subject: [PATCH 2/4] feat(v2): colorful sub-pages + Brevo screenshots section
  + 3 new blog posts + sitemap
 
 Colorful consistency across all sub-pages (previously only home was colorful):

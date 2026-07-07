@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
     <div className="pt-32 pb-24">
       <div className="container max-w-3xl">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-emerald text-xs font-mono uppercase tracking-widest mb-6"><Shield className="h-3 w-3" /> Legal</div>
-        <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-4">Privacy Policy</h1>
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight gradient-text break-words mb-4">Privacy Policy</h1>
         <p className="text-muted-foreground">Last updated: {updated}</p>
 
         <div className="prose prose-neutral dark:prose-invert max-w-none mt-10 space-y-8">

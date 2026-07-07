@@ -26,8 +26,8 @@ export default function TemplatesPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-cyan text-xs font-mono uppercase tracking-widest mb-6">
               <Sparkles className="h-3 w-3" /> Email Templates
             </div>
-            <h1 className="font-display text-5xl md:text-7xl font-semibold tracking-tight gradient-text">Production-ready emails.</h1>
-            <p className="mt-5 text-lg md:text-xl text-muted-foreground max-w-2xl">9 battle-tested HTML email templates. Copy, customize, ship. All variables documented and works in every client.</p>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight gradient-text break-words">Production-ready emails.</h1>
+            <p className="mt-5 text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl">9 battle-tested HTML email templates. Copy, customize, ship. All variables documented and works in every client.</p>
           </motion.div>
 
           <div className="mt-10 max-w-3xl">

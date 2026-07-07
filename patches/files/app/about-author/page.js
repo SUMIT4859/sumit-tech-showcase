@@ -47,7 +47,7 @@ export default function AboutAuthorPage() {
           </div>
 
           <div className="md:col-span-8">
-            <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-3">Sumitkumar Pandit</h1>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight gradient-text break-words mb-3">Sumitkumar Pandit</h1>
             <p className="text-muted-foreground text-lg leading-relaxed">Full Stack Developer · AI Engineer · Web3 Builder</p>
             <p className="mt-2 text-sm text-muted-foreground inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> India · Publishing under my real name at <b className="text-foreground">codedbysumit.com</b></p>
 

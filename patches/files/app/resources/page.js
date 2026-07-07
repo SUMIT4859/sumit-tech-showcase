@@ -28,7 +28,7 @@ export default function ResourcesPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-pink text-xs font-mono uppercase tracking-widest mb-6">
             <Sparkles className="h-3 w-3" /> Resources
           </div>
-          <h1 className="font-display text-5xl md:text-7xl font-semibold tracking-tight gradient-text">Reference, not fluff.</h1>
+          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight gradient-text break-words">Reference, not fluff.</h1>
           <p className="mt-5 text-lg md:text-xl text-muted-foreground">The definitions, checklists and authentication guides you will actually bookmark and use.</p>
         </div>
       </section>

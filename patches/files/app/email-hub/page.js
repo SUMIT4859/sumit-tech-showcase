@@ -31,7 +31,7 @@ export default function EmailHubPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-emerald text-xs font-mono uppercase tracking-widest mb-6">
               <Sparkles className="h-3 w-3" /> Email Hub
             </div>
-            <h1 className="font-display text-5xl md:text-7xl font-semibold tracking-tight gradient-text">Learn email marketing, properly.</h1>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight gradient-text break-words">Learn email marketing, properly.</h1>
             <p className="mt-5 text-lg md:text-xl text-muted-foreground max-w-2xl">The complete reference for shipping email - Brevo guides, SMTP tutorials, deliverability, automation and honest comparisons. Everything you need in one place.</p>
           </div>
         </div>

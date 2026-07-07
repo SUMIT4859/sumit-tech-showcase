@@ -14,7 +14,7 @@ export default function AffiliateDisclosurePage() {
     <div className="pt-32 pb-24">
       <div className="container max-w-3xl">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-amber text-xs font-mono uppercase tracking-widest mb-6"><DollarSign className="h-3 w-3" /> Legal &amp; Transparency</div>
-        <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-4">Affiliate Disclosure</h1>
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight gradient-text break-words mb-4">Affiliate Disclosure</h1>
         <p className="text-muted-foreground">Last updated: {updated}</p>
 
         <div className="glass-card-glow rounded-3xl p-6 md:p-8 mt-10">

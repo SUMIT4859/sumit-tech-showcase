@@ -166,26 +166,30 @@ function About() {
         <div className="mt-24">
           <Reveal>
             <div className="flex items-center gap-3 mb-10">
-              <GraduationCap className="h-6 w-6" />
-              <h3 className="font-display text-2xl md:text-3xl font-semibold">Education & Journey</h3>
+              <div className="h-11 w-11 rounded-xl icon-emerald flex items-center justify-center shadow-lg"><GraduationCap className="h-5 w-5" /></div>
+              <h3 className="font-display text-2xl md:text-3xl font-semibold gradient-text">Education &amp; Journey</h3>
             </div>
           </Reveal>
-          <div className="relative pl-6 md:pl-8 border-l border-border">
-            {TIMELINE.map((t, i) => (
+          <div className="relative pl-6 md:pl-8" style={{ borderLeft: '2px solid transparent', borderImage: 'linear-gradient(180deg, hsl(var(--brand-emerald)), hsl(var(--brand-purple)), hsl(var(--brand-amber))) 1 100%' }}>
+            {TIMELINE.map((t, i) => {
+              const ACC = ['emerald', 'purple', 'amber', 'cyan', 'pink', 'blue'];
+              const acc = ACC[i % ACC.length];
+              return (
               <Reveal key={i} delay={i * 0.1}>
                 <div className="relative pb-12 last:pb-0">
-                  <span className="absolute -left-[31px] md:-left-[37px] top-1.5 h-3 w-3 rounded-full bg-foreground ring-4 ring-background" />
+                  <span className={`absolute -left-[32px] md:-left-[38px] top-1.5 h-4 w-4 rounded-full ring-4 ring-background icon-${acc} shadow-lg`} />
                   <div className="glass-card rounded-2xl p-6">
                     <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2">
-                      <h4 className="font-display text-xl font-semibold">{t.title}</h4>
-                      <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{t.year}</span>
+                      <h4 className="font-display text-xl font-semibold" style={{ color: `hsl(var(--brand-${acc}))` }}>{t.title}</h4>
+                      <span className={`font-mono text-xs uppercase tracking-widest px-2 py-0.5 rounded-full badge-${acc}`}>{t.year}</span>
                     </div>
                     <p className="text-sm text-foreground/80 mb-2">{t.meta}</p>
                     <p className="text-muted-foreground">{t.desc}</p>
                   </div>
                 </div>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -230,13 +234,19 @@ function Projects() {
       <div className="container">
         <SectionTitle eyebrow="Selected Work" title="Projects that shipped." sub="From decentralized markets to AI agents - a glimpse into what I build." />
         <div className="grid md:grid-cols-2 gap-5">
-          {PROJECTS.map((p, i) => (
+          {PROJECTS.map((p, i) => {
+            const ACC = ['emerald', 'purple', 'amber', 'cyan', 'pink', 'blue'];
+            const acc = ACC[i % ACC.length];
+            return (
             <Reveal key={p.slug} delay={i * 0.05}>
               <article className="group relative overflow-hidden rounded-3xl glass-card p-8 h-full hover:bg-accent/30 transition-all duration-500">
-                <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-foreground/[0.04] blur-3xl group-hover:bg-foreground/[0.08] transition-all duration-700" />
+                <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full blur-3xl group-hover:opacity-100 opacity-70 transition-all duration-700" style={{ background: `hsl(var(--brand-${acc}) / 0.18)` }} />
                 <div className="relative">
                   <div className="flex flex-wrap gap-1.5 mb-5">
-                    {p.tags.map(t => <span key={t} className="text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md bg-foreground/5 border border-border">{t}</span>)}
+                    {p.tags.map((t, ti) => {
+                      const tagAcc = ACC[(i + ti) % ACC.length];
+                      return <span key={t} className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md badge-${tagAcc}`}>{t}</span>;
+                    })}
                   </div>
                   <h3 className="font-display text-2xl md:text-3xl font-semibold tracking-tight mb-3">{p.title}</h3>
                   <p className="text-muted-foreground mb-6 leading-relaxed">{p.description}</p>
@@ -246,13 +256,14 @@ function Projects() {
                     </div>
                     <div className="flex gap-2">
                       <a href={p.github} target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-full glass flex items-center justify-center hover:bg-accent transition" aria-label="GitHub"><Github className="h-4 w-4" /></a>
-                      <a href={p.live} target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-full glass flex items-center justify-center hover:bg-accent transition" aria-label="Live demo"><ArrowUpRight className="h-4 w-4" /></a>
+                      <a href={p.live} target="_blank" rel="noopener noreferrer" className={`h-9 w-9 rounded-full icon-${acc} flex items-center justify-center hover:opacity-90 transition shadow-lg`} aria-label="Live demo"><ArrowUpRight className="h-4 w-4" /></a>
                     </div>
                   </div>
                 </div>
               </article>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -391,7 +402,7 @@ function Achievements() {
           <div className="absolute inset-0 grid-pattern opacity-30 radial-fade" />
           {stats.map((s, i) => (
             <Reveal key={s.label} delay={i * 0.08} className="relative text-center">
-              <div className="font-display text-5xl md:text-6xl font-semibold tracking-tight gradient-text">
+              <div className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight gradient-text break-words">
                 <Counter to={s.value} suffix={s.suffix} />
               </div>
               <p className="mt-3 text-sm font-mono uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -439,9 +450,18 @@ function Contact() {
     e.preventDefault();
     const subject = encodeURIComponent(form.subject || `New message from ${form.name}`);
     const body = encodeURIComponent(`Hi Sumit,\n\n${form.message}\n\n— ${form.name}\n${form.email}`);
-    window.location.href = `mailto:hello@sumitpandit.dev?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:hello@codedbysumit.com?subject=${subject}&body=${body}`;
     toast.success('Opening your email client...');
   };
+
+  const CONTACTS = [
+    { Icon: Mail,     label: 'Email',    value: 'hello@codedbysumit.com',    href: 'mailto:hello@codedbysumit.com',       accent: 'emerald' },
+    { Icon: Phone,    label: 'Phone',    value: '+91 8539815985',            href: 'tel:+918539815985',                   accent: 'purple'  },
+    { Icon: MapPin,   label: 'Location', value: 'India · Remote-friendly',   href: '#',                                   accent: 'amber'   },
+    { Icon: Github,   label: 'GitHub',   value: '@SUMIT4859',                href: 'https://github.com/SUMIT4859',        accent: 'cyan'    },
+    { Icon: Twitter,  label: 'Twitter',  value: '@sumitxbt',                 href: 'https://x.com/sumitxbt',              accent: 'pink'    },
+    { Icon: Linkedin, label: 'LinkedIn', value: 'Sumitkumar Pandit',         href: 'https://www.linkedin.com/in/sumit-kumar4859', accent: 'blue' },
+  ];
 
   return (
     <section id="contact" className="py-32 relative">
@@ -449,35 +469,45 @@ function Contact() {
         <SectionTitle eyebrow="Contact" title="Let's work together." sub="Have a project, role or idea? Drop a message - I read every one." />
         <div className="grid lg:grid-cols-12 gap-8">
           <Reveal className="lg:col-span-5 space-y-4">
-            {[
-              { Icon: Mail, label: 'Email', value: 'hello@codedbysumit.com', href: 'mailto:hello@codedbysumit.com' },
-              { Icon: Phone, label: 'Phone', value: '+91 8539815985', href: 'tel:+918539815985' },
-              { Icon: MapPin, label: 'Location', value: 'India · Remote-friendly', href: '#' },
-              { Icon: Github, label: 'GitHub', value: '@sumit4859', href: 'https://github.com/sumit4859' },
-              { Icon: Twitter, label: 'Twitter', value: '@sumitxbt', href: 'https://x.com/sumitxbt' },
-              { Icon: Linkedin, label: 'LinkedIn', value: 'Sumitkumar Pandit', href: 'https://www.linkedin.com/in/sumit-kumar4859' },
-            ].map(({ Icon, label, value, href }) => (
+            {CONTACTS.map(({ Icon, label, value, href, accent }) => (
               <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer" className="flex items-center gap-4 glass-card rounded-2xl p-4 hover:bg-accent/40 transition group">
-                <div className="h-11 w-11 rounded-xl bg-foreground/5 border border-border flex items-center justify-center"><Icon className="h-4 w-4" /></div>
-                <div className="flex-1">
-                  <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">{label}</p>
-                  <p className="text-sm font-medium">{value}</p>
+                <div className={`h-11 w-11 rounded-xl icon-${accent} flex items-center justify-center shadow-lg group-hover:scale-110 transition`}><Icon className="h-4 w-4" /></div>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-xs font-mono uppercase tracking-widest font-semibold`} style={{ color: `hsl(var(--brand-${accent}))` }}>{label}</p>
+                  <p className="text-sm font-medium truncate">{value}</p>
                 </div>
-                <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition" />
+                <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition shrink-0" />
               </a>
             ))}
           </Reveal>
           <Reveal delay={0.1} className="lg:col-span-7">
-            <form onSubmit={submit} className="glass-card rounded-3xl p-7 space-y-4">
-              <div className="grid sm:grid-cols-2 gap-4">
-                <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Your name" className="bg-transparent border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-foreground transition" />
-                <input required type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="Your email" className="bg-transparent border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-foreground transition" />
+            <form onSubmit={submit} className="glass-card-glow rounded-3xl p-7 space-y-4 relative overflow-hidden">
+              <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl" style={{ background: 'hsl(var(--brand-emerald) / 0.15)' }} />
+              <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl" style={{ background: 'hsl(var(--brand-purple) / 0.15)' }} />
+              <div className="relative grid sm:grid-cols-2 gap-4">
+                <div className="relative">
+                  <label className="block text-[10px] font-mono uppercase tracking-widest mb-1.5 font-semibold" style={{ color: 'hsl(var(--brand-emerald))' }}>Your name</label>
+                  <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Ada Lovelace" className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-[hsl(var(--brand-emerald))] transition" />
+                </div>
+                <div className="relative">
+                  <label className="block text-[10px] font-mono uppercase tracking-widest mb-1.5 font-semibold" style={{ color: 'hsl(var(--brand-purple))' }}>Your email</label>
+                  <input required type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="ada@example.com" className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-[hsl(var(--brand-purple))] transition" />
+                </div>
               </div>
-              <input value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} placeholder="Subject (project, role, idea…)" className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-foreground transition" />
-              <textarea required rows={6} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder="Tell me about your project or idea…" className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-foreground transition resize-none" />
-              <button className="group inline-flex items-center gap-2 px-6 py-3 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition">
-                Send message <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </button>
+              <div className="relative">
+                <label className="block text-[10px] font-mono uppercase tracking-widest mb-1.5 font-semibold" style={{ color: 'hsl(var(--brand-amber))' }}>Subject</label>
+                <input value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} placeholder="Project, role, idea…" className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-[hsl(var(--brand-amber))] transition" />
+              </div>
+              <div className="relative">
+                <label className="block text-[10px] font-mono uppercase tracking-widest mb-1.5 font-semibold" style={{ color: 'hsl(var(--brand-cyan))' }}>Message</label>
+                <textarea required rows={6} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder="Tell me about your project or idea…" className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-transparent focus:ring-2 focus:ring-[hsl(var(--brand-cyan))] transition resize-none" />
+              </div>
+              <div className="relative flex flex-wrap items-center justify-between gap-3 pt-2">
+                <p className="text-xs text-muted-foreground">Or email direct: <a href="mailto:hello@codedbysumit.com" className="underline" style={{ color: 'hsl(var(--brand-emerald))' }}>hello@codedbysumit.com</a></p>
+                <button className="group inline-flex items-center gap-2 px-6 py-3 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition">
+                  Send message <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </button>
+              </div>
             </form>
           </Reveal>
         </div>
