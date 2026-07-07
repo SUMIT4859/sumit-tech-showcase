@@ -1,7 +1,8 @@
 From 905ef0074707db0201e430ec0945304adb8b7ded Mon Sep 17 00:00:00 2001
 From: Sumitkumar Pandit <hello@codedbysumit.com>
 Date: Tue, 7 Jul 2026 05:49:27 +0000
-Subject: [PATCH] feat: Brevo trust-signal overhaul + colorful premium theme
+Subject: [PATCH 1/2] feat: Brevo trust-signal overhaul + colorful premium
+ theme
 
 Trust & compliance fixes (Brevo reapplication):
 - Remove all 3 fake testimonials from lib/data/site.js

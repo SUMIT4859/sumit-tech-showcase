@@ -76,7 +76,7 @@ export default function AboutAuthorPage() {
               <div className="glass-card rounded-2xl p-5">
                 <div className="h-10 w-10 rounded-xl icon-cyan flex items-center justify-center mb-3"><BookOpen className="h-5 w-5" /></div>
                 <p className="font-display font-semibold">On this site</p>
-                <p className="text-sm text-muted-foreground mt-1">12 in-depth guides · 9 email templates · 4 free tools · 1 honest Brevo review.</p>
+                <p className="text-sm text-muted-foreground mt-1">14+ in-depth guides &middot; 9 email templates &middot; 5 free tools &middot; 1 honest Brevo review.</p>
               </div>
             </div>
 

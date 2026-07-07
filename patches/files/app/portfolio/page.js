@@ -91,7 +91,7 @@ function Hero() {
           </p>
 
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Link href="#projects" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-medium hover:opacity-90 transition shadow-lg shadow-foreground/10">
+            <Link href="#projects" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition">
               <FolderGit2 className="h-4 w-4" /> View Projects <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <a href="https://customer-assets.emergentagent.com/job_sumit-tech-showcase/artifacts/2t986lsw_Sumitkumar_Pandit_Resume.pdf" target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass text-sm font-medium hover:bg-accent transition">
@@ -330,10 +330,12 @@ function Services() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {SERVICES.map((s, i) => {
             const Icon = ICONS[s.icon] || Sparkles;
+            const ACC = ['emerald', 'purple', 'amber', 'cyan', 'pink', 'blue'];
+            const acc = ACC[i % ACC.length];
             return (
               <Reveal key={s.title} delay={i * 0.04}>
                 <div className="group glass-card rounded-2xl p-7 h-full hover:bg-accent/40 transition-all duration-500">
-                  <div className="h-11 w-11 rounded-xl bg-foreground text-background flex items-center justify-center mb-5 group-hover:scale-110 transition">
+                  <div className={`h-11 w-11 rounded-xl icon-${acc} flex items-center justify-center mb-5 group-hover:scale-110 transition shadow-lg`}>
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="font-display text-lg font-semibold mb-2">{s.title}</h3>
@@ -469,7 +471,7 @@ function Contact() {
               </div>
               <input value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} placeholder="Subject (project, role, idea…)" className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-foreground transition" />
               <textarea required rows={6} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder="Tell me about your project or idea…" className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-foreground transition resize-none" />
-              <button className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-medium hover:opacity-90 transition">
+              <button className="group inline-flex items-center gap-2 px-6 py-3 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition">
                 Send message <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </button>
             </form>
@@ -486,11 +488,14 @@ function Certifications() {
       <div className="container">
         <SectionTitle eyebrow="Certifications" title="Continuous learning, certified." sub="Selected credentials backing the work." />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {CERTIFICATIONS.map((c, i) => (
+          {CERTIFICATIONS.map((c, i) => {
+            const ACC = ['emerald', 'purple', 'amber', 'cyan', 'pink', 'blue'];
+            const acc = ACC[i % ACC.length];
+            return (
             <Reveal key={c.title} delay={i * 0.05}>
               <a href={c.credential} target="_blank" rel="noreferrer" className="group glass-card rounded-2xl p-6 h-full hover:bg-accent/40 transition-all duration-500 hover:-translate-y-1 flex flex-col">
                 <div className="flex items-start justify-between mb-4">
-                  <div className="h-11 w-11 rounded-xl bg-foreground text-background flex items-center justify-center"><Award className="h-5 w-5" /></div>
+                  <div className={`h-11 w-11 rounded-xl icon-${acc} flex items-center justify-center shadow-lg`}><Award className="h-5 w-5" /></div>
                   <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">{c.year}</span>
                 </div>
                 <h3 className="font-display text-base font-semibold leading-snug mb-2">{c.title}</h3>
@@ -500,7 +505,8 @@ function Certifications() {
                 </p>
               </a>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

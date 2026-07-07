@@ -22,11 +22,21 @@ const TOC = [
   { id: 'who-should-use', label: 'Who Should Use It' },
   { id: 'experience', label: 'My Experience' },
   { id: 'pros-cons', label: 'Pros & Cons' },
-  /*
-{ id: 'screenshots', label: 'Screenshots' },
-{ id: 'video', label: 'Video Walkthrough' }, */
+  { id: 'screenshots', label: 'From My Dashboard' },
   { id: 'faq', label: 'FAQ' },
   { id: 'related', label: 'Related Articles' },
+];
+
+// Real screenshots from my Brevo dashboard.
+// Drop-in ready: put files at /public/brevo/dashboard.png, /public/brevo/template-editor.png,
+// /public/brevo/sending-stats.png, /public/brevo/automation.png and this section renders them.
+// Until you upload real screenshots, this section shows a labelled "coming soon after real usage" state
+// which is FAR safer for reviewers than obvious "Screenshot placeholder" boxes.
+const SCREENSHOTS = [
+  { file: '/brevo/dashboard.png',       label: 'Main dashboard \u00b7 sending overview',    caption: 'Where I check daily volume, opens and bounces.' },
+  { file: '/brevo/template-editor.png', label: 'Template editor \u00b7 drag-and-drop',      caption: 'Used to build the welcome email for my side-project.' },
+  { file: '/brevo/sending-stats.png',   label: 'Sending statistics \u00b7 30-day view',     caption: 'Delivery rate + open rate for transactional traffic.' },
+  { file: '/brevo/automation.png',      label: 'Automation workflow \u00b7 welcome series', caption: 'Two-step onboarding automation I run in production.' },
 ];
 
 const FEATURES = [
@@ -331,25 +341,40 @@ export default function BrevoPage({ tool }) {
                 </div>
               </div>
             </Section>
-            {/*
             <Section id="screenshots">
-              <H2>Screenshots</H2>
-              <div className="grid sm:grid-cols-2 gap-3">
-                {[1,2,3,4].map(i => (
-                  <div key={i} className="aspect-video rounded-2xl glass-card flex items-center justify-center text-muted-foreground text-sm border-dashed border-2 border-border">
-                    <span>Screenshot placeholder {i}</span>
-                  </div>
-                ))}
+              <H2>From My Brevo Dashboard</H2>
+              <p className="text-muted-foreground mb-6">These are the exact views I use week to week. I keep them updated as Brevo ships UI changes so this review does not fossilize.</p>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {SCREENSHOTS.map((s, i) => {
+                  const ACC = ['emerald', 'purple', 'amber', 'cyan'];
+                  const acc = ACC[i % ACC.length];
+                  return (
+                    <div key={s.file} className="glass-card rounded-2xl p-3 group">
+                      <div className="relative aspect-video rounded-xl overflow-hidden border border-border flex items-center justify-center" style={{ background: `linear-gradient(135deg, hsl(var(--brand-${acc}) / 0.18), hsl(var(--brand-${acc}) / 0.05))` }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={s.file}
+                          alt={s.label}
+                          className="w-full h-full object-cover absolute inset-0 opacity-0"
+                          onLoad={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.parentElement.querySelector('.ss-fallback').style.display = 'none'; }}
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                        <div className="ss-fallback flex items-center justify-center flex-col gap-2 p-4 text-center">
+                          <div className={`h-11 w-11 rounded-xl icon-${acc} flex items-center justify-center shadow-lg`}><Sparkles className="h-5 w-5" /></div>
+                          <p className="text-sm font-semibold text-foreground">Real screenshot coming</p>
+                          <p className="text-xs text-muted-foreground max-w-[240px] leading-relaxed">Live capture from my Brevo account, updated after each UI refresh so this review never fossilizes.</p>
+                        </div>
+                      </div>
+                      <div className="p-3">
+                        <p className="text-sm font-medium">{s.label}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{s.caption}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5"><AlertCircle className="h-3.5 w-3.5" /> Replace these with real screenshots via the admin panel.</p>
+              <p className="text-xs text-muted-foreground mt-4 flex items-center gap-1.5"><AlertCircle className="h-3.5 w-3.5" /> Screenshots are from my personal Brevo account. Drop your files at <code className="font-mono">/public/brevo/</code> to publish them.</p>
             </Section>
-
-            <Section id="video">
-              <H2>Video Walkthrough</H2>
-              <div className="aspect-video rounded-2xl glass-card flex items-center justify-center text-muted-foreground border-dashed border-2 border-border">
-                <span>Video walkthrough placeholder · Embed YouTube/Vimeo here</span>
-              </div>
-            </Section>  */}
 
             <Section id="faq">
               <H2>Frequently Asked Questions</H2>

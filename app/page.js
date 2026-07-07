@@ -95,9 +95,9 @@ function Hero() {
           </div>
 
           <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs font-mono uppercase tracking-widest text-muted-foreground">
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-emerald))' }} /> 12 In-Depth Guides</span>
+            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-emerald))' }} /> 14+ In-Depth Guides</span>
             <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-purple))' }} /> 9 Templates</span>
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-amber))' }} /> 4 Free Tools</span>
+            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-amber))' }} /> 5 Free Tools</span>
             <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-cyan))' }} /> Honest Reviews</span>
           </div>
         </motion.div>
