@@ -1,0 +1,1664 @@
+From 905ef0074707db0201e430ec0945304adb8b7ded Mon Sep 17 00:00:00 2001
+From: Sumitkumar Pandit <hello@codedbysumit.com>
+Date: Tue, 7 Jul 2026 05:49:27 +0000
+Subject: [PATCH] feat: Brevo trust-signal overhaul + colorful premium theme
+
+Trust & compliance fixes (Brevo reapplication):
+- Remove all 3 fake testimonials from lib/data/site.js
+- Replace testimonials section with TrustPillars (honest value-props)
+- Fix inflated hero stats: '30+ Guides' -> '12 In-Depth Guides'
+- Fix inflated portfolio GitHub stats: '500+ Stars/1,200+ Contributions' -> real, honest values
+- Fix broken affiliate URL bug on /tools/brevo (AFFILIATE_URL was '#')
+- Rewrite Brevo 'My Experience' with concrete SPF/DKIM/DMARC details
+- Remove 'admin panel' note that suggested placeholder content
+
+New legal pages (Brevo requires all 3):
+- /privacy-policy (GDPR/CCPA compliant text)
+- /terms (Terms of Service)
+- /affiliate-disclosure (FTC-compliant)
+- /about-author (real credentials, real bio, JSON-LD Person schema)
+
+Footer overhaul:
+- New Legal column linking all 4 new pages
+- 'Published by Sumitkumar Pandit - real domain, real name, real GitHub' badge
+- Email hello@codedbysumit.com everywhere (matches domain)
+
+Colorful premium theme (retains light + dark):
+- 6-color brand palette: emerald / purple / amber / cyan / pink / blue
+- CSS vars for each brand color (light + dark tones)
+- Rotating accent badges on cards (rainbow rotation)
+- gradient-text, gradient-text-warm, gradient-text-cool utilities
+- btn-primary-gradient, btn-warm-gradient, btn-cool-gradient
+- icon-{emerald|purple|amber|cyan|pink|blue} for colorful icon tiles
+- badge-{color} for tinted pill badges
+- aurora-bg utility for hero/CTA glow layers
+- glass-card-glow for gradient-border feature cards
+- Colorful scrollbar, selection, rings
+---
+ app/about-author/page.js         |  93 +++++++++++++
+ app/affiliate-disclosure/page.js |  81 +++++++++++
+ app/globals.css                  | 170 ++++++++++++++++++-----
+ app/layout.js                    |   2 +-
+ app/page.js                      | 225 +++++++++++++++++--------------
+ app/portfolio/page.js            |  10 +-
+ app/privacy-policy/page.js       |  81 +++++++++++
+ app/terms/page.js                |  77 +++++++++++
+ app/tools/[slug]/brevo-page.jsx  |  23 ++--
+ components/Footer.jsx            |  36 +++--
+ lib/data/site.js                 | 193 +++++++++-----------------
+ tailwind.config.js               | 174 +++++++++++-------------
+ 12 files changed, 785 insertions(+), 380 deletions(-)
+ create mode 100644 app/about-author/page.js
+ create mode 100644 app/affiliate-disclosure/page.js
+ create mode 100644 app/privacy-policy/page.js
+ create mode 100644 app/terms/page.js
+
+diff --git a/app/about-author/page.js b/app/about-author/page.js
+new file mode 100644
+index 0000000..00c133d
+--- /dev/null
++++ b/app/about-author/page.js
+@@ -0,0 +1,93 @@
++import Link from 'next/link';
++import Image from 'next/image';
++import { Github, Linkedin, Twitter, Mail, GraduationCap, Code2, Sparkles, MapPin, ArrowUpRight, BookOpen } from 'lucide-react';
++
++export const metadata = {
++  title: 'About the Author',
++  description: 'Sumitkumar Pandit - M.Sc. IT student, Full Stack Developer, AI Engineer &amp; Web3 Builder. Author of codedbysumit.com.',
++  alternates: { canonical: '/about-author' },
++};
++
++export default function AboutAuthorPage() {
++  const jsonLd = {
++    '@context': 'https://schema.org',
++    '@type': 'Person',
++    name: 'Sumitkumar Pandit',
++    jobTitle: 'Full Stack Developer, AI Engineer, Web3 Developer',
++    url: 'https://codedbysumit.com/about-author',
++    email: 'hello@codedbysumit.com',
++    sameAs: [
++      'https://github.com/SUMIT4859',
++      'https://www.linkedin.com/in/sumit-kumar4859',
++      'https://x.com/sumitxbt',
++    ],
++    alumniOf: 'M.Sc. Information Technology',
++    description: 'Independent developer publishing honest reviews, tutorials and free tools on email marketing, AI and web development.'
++  };
++
++  return (
++    <div className="pt-32 pb-24">
++      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
++      <div className="container max-w-4xl">
++        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-blue text-xs font-mono uppercase tracking-widest mb-6"><Sparkles className="h-3 w-3" /> About the Author</div>
++
++        <div className="grid md:grid-cols-12 gap-10 items-start">
++          <div className="md:col-span-4">
++            <div className="glass-card-glow rounded-3xl p-2">
++              <div className="relative aspect-square rounded-2xl overflow-hidden bg-white">
++                <Image src="/logos/profile.png" alt="Sumitkumar Pandit" fill className="object-cover" priority />
++              </div>
++            </div>
++            <div className="mt-4 flex flex-wrap gap-2">
++              <a href="https://github.com/SUMIT4859" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs hover:bg-accent transition"><Github className="h-3.5 w-3.5" /> GitHub</a>
++              <a href="https://www.linkedin.com/in/sumit-kumar4859" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs hover:bg-accent transition"><Linkedin className="h-3.5 w-3.5" /> LinkedIn</a>
++              <a href="https://x.com/sumitxbt" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs hover:bg-accent transition"><Twitter className="h-3.5 w-3.5" /> X / Twitter</a>
++              <a href="mailto:hello@codedbysumit.com" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs hover:bg-accent transition"><Mail className="h-3.5 w-3.5" /> Email</a>
++            </div>
++          </div>
++
++          <div className="md:col-span-8">
++            <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-3">Sumitkumar Pandit</h1>
++            <p className="text-muted-foreground text-lg leading-relaxed">Full Stack Developer · AI Engineer · Web3 Builder</p>
++            <p className="mt-2 text-sm text-muted-foreground inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> India · Publishing under my real name at <b className="text-foreground">codedbysumit.com</b></p>
++
++            <div className="mt-8 space-y-5 text-muted-foreground leading-relaxed">
++              <p>I&apos;m an M.Sc. Information Technology student (current CGPA <b className="text-foreground">9.85</b>, B.Sc. IT CGPA <b className="text-foreground">9.73</b>) and an independent full-stack developer. I ship dApps on Base, AI agents with Groq and OpenAI, and production Next.js applications.</p>
++              <p>I started <b className="text-foreground">codedbysumit.com</b> because most tutorials and “reviews” on the internet are either paid puff pieces or content-farm rewrites. I wanted a single place where developers, indie hackers and small SaaS founders can get straight answers on email marketing, SMTP, and the modern web stack — written by someone who actually builds and ships.</p>
++              <p>Every review here is based on personal usage. Every code snippet has been run. Every free tool works in the browser with no signup and no email wall.</p>
++            </div>
++
++            <div className="mt-10 grid sm:grid-cols-2 gap-4">
++              <div className="glass-card rounded-2xl p-5">
++                <div className="h-10 w-10 rounded-xl icon-emerald flex items-center justify-center mb-3"><GraduationCap className="h-5 w-5" /></div>
++                <p className="font-display font-semibold">Education</p>
++                <p className="text-sm text-muted-foreground mt-1">M.Sc. Information Technology (in progress · CGPA 9.85)<br />B.Sc. Information Technology (CGPA 9.73)</p>
++              </div>
++              <div className="glass-card rounded-2xl p-5">
++                <div className="h-10 w-10 rounded-xl icon-purple flex items-center justify-center mb-3"><Code2 className="h-5 w-5" /></div>
++                <p className="font-display font-semibold">Stack</p>
++                <p className="text-sm text-muted-foreground mt-1">Next.js · React · Node.js · Python · Solidity · MongoDB · Tailwind</p>
++              </div>
++              <div className="glass-card rounded-2xl p-5">
++                <div className="h-10 w-10 rounded-xl icon-amber flex items-center justify-center mb-3"><Sparkles className="h-5 w-5" /></div>
++                <p className="font-display font-semibold">Focus areas</p>
++                <p className="text-sm text-muted-foreground mt-1">Email infra &amp; deliverability, AI agents, Web3 on Base, developer education.</p>
++              </div>
++              <div className="glass-card rounded-2xl p-5">
++                <div className="h-10 w-10 rounded-xl icon-cyan flex items-center justify-center mb-3"><BookOpen className="h-5 w-5" /></div>
++                <p className="font-display font-semibold">On this site</p>
++                <p className="text-sm text-muted-foreground mt-1">12 in-depth guides · 9 email templates · 4 free tools · 1 honest Brevo review.</p>
++              </div>
++            </div>
++
++            <div className="mt-10 flex flex-wrap gap-3">
++              <Link href="/portfolio" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition">See my work <ArrowUpRight className="h-4 w-4" /></Link>
++              <Link href="/blog" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition">Read the blog</Link>
++              <Link href="/portfolio#contact" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition">Get in touch</Link>
++            </div>
++          </div>
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/app/affiliate-disclosure/page.js b/app/affiliate-disclosure/page.js
+new file mode 100644
+index 0000000..266c4cb
+--- /dev/null
++++ b/app/affiliate-disclosure/page.js
+@@ -0,0 +1,81 @@
++import Link from 'next/link';
++import { DollarSign, Mail, Check } from 'lucide-react';
++
++export const metadata = {
++  title: 'Affiliate Disclosure',
++  description: 'How affiliate links work on codedbysumit.com - full transparency, no hidden endorsements.',
++  alternates: { canonical: '/affiliate-disclosure' },
++};
++
++const updated = 'June 2025';
++
++export default function AffiliateDisclosurePage() {
++  return (
++    <div className="pt-32 pb-24">
++      <div className="container max-w-3xl">
++        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-amber text-xs font-mono uppercase tracking-widest mb-6"><DollarSign className="h-3 w-3" /> Legal &amp; Transparency</div>
++        <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-4">Affiliate Disclosure</h1>
++        <p className="text-muted-foreground">Last updated: {updated}</p>
++
++        <div className="glass-card-glow rounded-3xl p-6 md:p-8 mt-10">
++          <p className="text-lg text-foreground leading-relaxed">
++            <b>codedbysumit.com</b> participates in affiliate programs. This means we <b>may earn a commission</b> when you sign up for or purchase a product through certain outbound links on this site — <b>at no additional cost to you</b>.
++          </p>
++        </div>
++
++        <div className="mt-10 space-y-8">
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">Our promise</h2>
++            <ul className="space-y-2.5">
++              {[
++                'We only link to products we have used personally or tested extensively.',
++                'Affiliate commission never changes our opinion. A bad product does not become good because it pays a commission.',
++                'Where a product has an affiliate program and a superior competitor does not, we still recommend the better product.',
++                'All review pages carry a visible disclosure notice near the top.',
++                'Sponsored posts, if any, are labelled clearly as “Sponsored” and never disguised as organic reviews.',
++              ].map(t => (
++                <li key={t} className="flex items-start gap-2.5 text-muted-foreground"><Check className="h-4 w-4 mt-1 shrink-0" style={{ color: 'hsl(var(--brand-emerald))' }} /> {t}</li>
++              ))}
++            </ul>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">Programs we participate in</h2>
++            <p className="text-muted-foreground leading-relaxed mb-3">As of {updated}, we may earn a commission from the following (list is updated when it changes):</p>
++            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
++              <li><b>Brevo</b> - email marketing &amp; transactional platform</li>
++              <li>Other developer &amp; SaaS tools (Namecheap, Cloudflare, Hostinger and similar) are being evaluated — clearly labelled if/when active.</li>
++            </ul>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">Why we do this</h2>
++            <p className="text-muted-foreground leading-relaxed">Running this site costs money (domain, hosting, tools, time). Affiliate commissions let us keep every article, tool and template <b>100% free with no paywall</b>. If you find our content useful, using our affiliate links is a free way to support the work — and we appreciate it.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">FTC compliance</h2>
++            <p className="text-muted-foreground leading-relaxed">This disclosure is provided in accordance with the U.S. Federal Trade Commission&apos;s 16 CFR, Part 255: “Guides Concerning the Use of Endorsements and Testimonials in Advertising.”</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">Questions?</h2>
++            <p className="text-muted-foreground leading-relaxed">If anything above is unclear, or you want to know whether a specific link is an affiliate link, email us at <a href="mailto:hello@codedbysumit.com" className="underline">hello@codedbysumit.com</a>.</p>
++          </section>
++
++          <div className="glass-card rounded-2xl p-6 mt-6 flex gap-4 items-start">
++            <div className="h-10 w-10 rounded-xl icon-amber flex items-center justify-center shrink-0"><Mail className="h-4 w-4" /></div>
++            <div>
++              <p className="font-medium">Prefer to skip the affiliate link?</p>
++              <p className="text-sm text-muted-foreground">You are always welcome to Google the product name directly and sign up organically. Our content remains the same either way.</p>
++            </div>
++          </div>
++
++          <div className="pt-8 text-sm">
++            See also: <Link href="/privacy-policy" className="underline">Privacy Policy</Link> · <Link href="/terms" className="underline">Terms</Link> · <Link href="/about-author" className="underline">About the Author</Link>
++          </div>
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/app/globals.css b/app/globals.css
+index 94067b8..66b0d6c 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -7,46 +7,66 @@
+ @layer base {
+   :root {
+     --background: 0 0% 100%;
+-    --foreground: 0 0% 4%;
++    --foreground: 240 10% 4%;
+     --card: 0 0% 100%;
+-    --card-foreground: 0 0% 4%;
++    --card-foreground: 240 10% 4%;
+     --popover: 0 0% 100%;
+-    --popover-foreground: 0 0% 4%;
+-    --primary: 0 0% 4%;
+-    --primary-foreground: 0 0% 98%;
+-    --secondary: 0 0% 96%;
+-    --secondary-foreground: 0 0% 4%;
+-    --muted: 0 0% 96%;
+-    --muted-foreground: 0 0% 40%;
+-    --accent: 0 0% 96%;
+-    --accent-foreground: 0 0% 4%;
++    --popover-foreground: 240 10% 4%;
++    --primary: 158 88% 32%;
++    --primary-foreground: 0 0% 100%;
++    --secondary: 240 5% 96%;
++    --secondary-foreground: 240 10% 4%;
++    --muted: 240 5% 96%;
++    --muted-foreground: 240 4% 40%;
++    --accent: 240 5% 96%;
++    --accent-foreground: 240 10% 4%;
+     --destructive: 0 84% 60%;
+     --destructive-foreground: 0 0% 98%;
+-    --border: 0 0% 90%;
+-    --input: 0 0% 90%;
+-    --ring: 0 0% 4%;
++    --border: 240 6% 90%;
++    --input: 240 6% 90%;
++    --ring: 158 88% 32%;
+     --radius: 0.75rem;
++
++    --brand-emerald: 158 88% 32%;
++    --brand-purple: 262 83% 58%;
++    --brand-amber: 38 92% 50%;
++    --brand-cyan: 187 92% 45%;
++    --brand-pink: 330 81% 60%;
++    --brand-blue: 217 91% 60%;
++
++    --chart-1: 158 88% 32%;
++    --chart-2: 262 83% 58%;
++    --chart-3: 38 92% 50%;
++    --chart-4: 187 92% 45%;
++    --chart-5: 330 81% 60%;
+   }
+   .dark {
+-    --background: 0 0% 3%;
++    --background: 240 10% 3%;
+     --foreground: 0 0% 98%;
+-    --card: 0 0% 5%;
++    --card: 240 10% 5%;
+     --card-foreground: 0 0% 98%;
+-    --popover: 0 0% 5%;
++    --popover: 240 10% 5%;
+     --popover-foreground: 0 0% 98%;
+-    --primary: 0 0% 98%;
+-    --primary-foreground: 0 0% 4%;
+-    --secondary: 0 0% 10%;
++    --primary: 158 76% 45%;
++    --primary-foreground: 240 10% 4%;
++    --secondary: 240 6% 10%;
+     --secondary-foreground: 0 0% 98%;
+-    --muted: 0 0% 10%;
+-    --muted-foreground: 0 0% 60%;
+-    --accent: 0 0% 12%;
++    --muted: 240 6% 10%;
++    --muted-foreground: 240 5% 65%;
++    --accent: 240 6% 12%;
+     --accent-foreground: 0 0% 98%;
+     --destructive: 0 70% 45%;
+     --destructive-foreground: 0 0% 98%;
+-    --border: 0 0% 14%;
+-    --input: 0 0% 14%;
+-    --ring: 0 0% 80%;
++    --border: 240 6% 14%;
++    --input: 240 6% 14%;
++    --ring: 158 76% 45%;
++
++    --brand-emerald: 158 76% 45%;
++    --brand-purple: 262 83% 68%;
++    --brand-amber: 38 92% 60%;
++    --brand-cyan: 187 92% 55%;
++    --brand-pink: 330 81% 70%;
++    --brand-blue: 217 91% 70%;
+   }
+ }
+ 
+@@ -60,29 +80,97 @@
+     overflow-x: hidden;
+     max-width: 100vw;
+   }
+-  ::selection { @apply bg-foreground text-background; }
++  ::selection { background: hsl(var(--brand-emerald) / 0.25); color: hsl(var(--foreground)); }
+   ::-webkit-scrollbar { width: 8px; height: 8px; }
+   ::-webkit-scrollbar-track { background: transparent; }
+-  ::-webkit-scrollbar-thumb { @apply bg-border rounded-full; }
+-  ::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground; }
++  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, hsl(var(--brand-emerald)), hsl(var(--brand-purple))); border-radius: 999px; }
++  ::-webkit-scrollbar-thumb:hover { opacity: 0.85; }
+ }
+ 
+ @layer utilities {
+   .font-display { font-family: 'Space Grotesk', 'Inter', sans-serif; letter-spacing: -0.02em; }
+   .font-mono { font-family: 'JetBrains Mono', monospace; }
+   .text-balance { text-wrap: balance; }
++
+   .gradient-text {
+-    background: linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--foreground) / 0.6) 100%);
++    background: linear-gradient(135deg, hsl(var(--brand-emerald)) 0%, hsl(var(--brand-purple)) 50%, hsl(var(--brand-blue)) 100%);
++    -webkit-background-clip: text;
++    background-clip: text;
++    -webkit-text-fill-color: transparent;
++    background-size: 200% 200%;
++    animation: gradient-shift 8s ease infinite;
++  }
++  .gradient-text-warm {
++    background: linear-gradient(135deg, hsl(var(--brand-amber)) 0%, hsl(var(--brand-pink)) 100%);
+     -webkit-background-clip: text;
+     background-clip: text;
+     -webkit-text-fill-color: transparent;
+   }
++  .gradient-text-cool {
++    background: linear-gradient(135deg, hsl(var(--brand-cyan)) 0%, hsl(var(--brand-blue)) 100%);
++    -webkit-background-clip: text;
++    background-clip: text;
++    -webkit-text-fill-color: transparent;
++  }
++
+   .glass {
+-    @apply backdrop-blur-xl bg-background/40 border border-border/50;
++    @apply backdrop-blur-xl bg-background/50 border border-border/50;
+   }
+   .glass-card {
+-    @apply backdrop-blur-2xl bg-card/30 border border-border/60;
++    @apply backdrop-blur-2xl bg-card/40 border border-border/60;
++    position: relative;
+   }
++  .glass-card-glow {
++    position: relative;
++    background: hsl(var(--card) / 0.5);
++    backdrop-filter: blur(20px);
++    border: 1px solid hsl(var(--border) / 0.6);
++  }
++  .glass-card-glow::before {
++    content: '';
++    position: absolute;
++    inset: 0;
++    border-radius: inherit;
++    padding: 1px;
++    background: linear-gradient(135deg, hsl(var(--brand-emerald) / 0.5), hsl(var(--brand-purple) / 0.4), hsl(var(--brand-amber) / 0.3));
++    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
++    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
++    -webkit-mask-composite: xor;
++    mask-composite: exclude;
++    pointer-events: none;
++    opacity: 0.9;
++  }
++
++  .btn-primary-gradient {
++    background: linear-gradient(135deg, hsl(var(--brand-emerald)) 0%, hsl(var(--brand-cyan)) 100%);
++    color: white;
++    box-shadow: 0 8px 24px -8px hsl(var(--brand-emerald) / 0.5);
++  }
++  .btn-warm-gradient {
++    background: linear-gradient(135deg, hsl(var(--brand-amber)) 0%, hsl(var(--brand-pink)) 100%);
++    color: white;
++    box-shadow: 0 8px 24px -8px hsl(var(--brand-pink) / 0.5);
++  }
++  .btn-cool-gradient {
++    background: linear-gradient(135deg, hsl(var(--brand-purple)) 0%, hsl(var(--brand-blue)) 100%);
++    color: white;
++    box-shadow: 0 8px 24px -8px hsl(var(--brand-purple) / 0.5);
++  }
++
++  .icon-emerald { background: linear-gradient(135deg, hsl(var(--brand-emerald)), hsl(var(--brand-cyan))); color: white; }
++  .icon-purple  { background: linear-gradient(135deg, hsl(var(--brand-purple)), hsl(var(--brand-blue))); color: white; }
++  .icon-amber   { background: linear-gradient(135deg, hsl(var(--brand-amber)), hsl(var(--brand-pink))); color: white; }
++  .icon-cyan    { background: linear-gradient(135deg, hsl(var(--brand-cyan)), hsl(var(--brand-blue))); color: white; }
++  .icon-pink    { background: linear-gradient(135deg, hsl(var(--brand-pink)), hsl(var(--brand-purple))); color: white; }
++  .icon-blue    { background: linear-gradient(135deg, hsl(var(--brand-blue)), hsl(var(--brand-purple))); color: white; }
++
++  .badge-emerald { background: hsl(var(--brand-emerald) / 0.12); color: hsl(var(--brand-emerald)); border: 1px solid hsl(var(--brand-emerald) / 0.25); }
++  .badge-purple  { background: hsl(var(--brand-purple) / 0.12);  color: hsl(var(--brand-purple));  border: 1px solid hsl(var(--brand-purple) / 0.25); }
++  .badge-amber   { background: hsl(var(--brand-amber) / 0.12);   color: hsl(var(--brand-amber));   border: 1px solid hsl(var(--brand-amber) / 0.25); }
++  .badge-cyan    { background: hsl(var(--brand-cyan) / 0.12);    color: hsl(var(--brand-cyan));    border: 1px solid hsl(var(--brand-cyan) / 0.25); }
++  .badge-pink    { background: hsl(var(--brand-pink) / 0.12);    color: hsl(var(--brand-pink));    border: 1px solid hsl(var(--brand-pink) / 0.25); }
++  .badge-blue    { background: hsl(var(--brand-blue) / 0.12);    color: hsl(var(--brand-blue));    border: 1px solid hsl(var(--brand-blue) / 0.25); }
++
+   .noise {
+     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+   }
+@@ -95,8 +183,14 @@
+   .radial-fade {
+     mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
+   }
++  .aurora-bg {
++    background:
++      radial-gradient(ellipse 60% 50% at 20% 20%, hsl(var(--brand-emerald) / 0.18), transparent 60%),
++      radial-gradient(ellipse 60% 50% at 80% 30%, hsl(var(--brand-purple) / 0.18), transparent 60%),
++      radial-gradient(ellipse 60% 50% at 50% 80%, hsl(var(--brand-amber) / 0.14), transparent 60%);
++  }
+   .shimmer {
+-    background: linear-gradient(110deg, transparent 30%, hsl(var(--foreground) / 0.08) 50%, transparent 70%);
++    background: linear-gradient(110deg, transparent 30%, hsl(var(--brand-emerald) / 0.10) 50%, transparent 70%);
+     background-size: 200% 100%;
+     animation: shimmer 3s linear infinite;
+   }
+@@ -104,6 +198,10 @@
+     0% { background-position: 200% 0; }
+     100% { background-position: -200% 0; }
+   }
++  @keyframes gradient-shift {
++    0%, 100% { background-position: 0% 50%; }
++    50% { background-position: 100% 50%; }
++  }
+   @keyframes float {
+     0%, 100% { transform: translateY(0px); }
+     50% { transform: translateY(-12px); }
+@@ -122,4 +220,10 @@
+     background-size: 200% 200%;
+     animation: aurora 12s ease infinite;
+   }
++  @keyframes pulse-ring {
++    0% { box-shadow: 0 0 0 0 hsl(var(--brand-emerald) / 0.4); }
++    70% { box-shadow: 0 0 0 12px hsl(var(--brand-emerald) / 0); }
++    100% { box-shadow: 0 0 0 0 hsl(var(--brand-emerald) / 0); }
++  }
++  .pulse-ring { animation: pulse-ring 2.5s cubic-bezier(0.66, 0, 0, 1) infinite; }
+ }
+diff --git a/app/layout.js b/app/layout.js
+index 227b1fe..a0e7830 100644
+--- a/app/layout.js
++++ b/app/layout.js
+@@ -47,7 +47,7 @@ export const metadata = {
+   icons: { icon: '/favicon.ico' },
+ };
+ 
+-export const viewport = { themeColor: '#000000' };
++export const viewport = { themeColor: '#0B996E' };
+ 
+ export default function RootLayout({ children }) {
+   const jsonLd = {
+diff --git a/app/page.js b/app/page.js
+index 4b3f8c6..f9d042d 100644
+--- a/app/page.js
++++ b/app/page.js
+@@ -6,17 +6,21 @@ import { useState } from 'react';
+ import {
+   ArrowRight, ArrowUpRight, Star, Sparkles, Mail, Send, Zap, Shield, BookOpen, Wrench,
+   FileText, Code2, Eye, Clock, ShieldAlert, Briefcase, Layers, GitCompare, HelpCircle,
+-  DollarSign, CheckCircle2, Quote
++  DollarSign, CheckCircle2, BadgeCheck, ShieldCheck, Github, Linkedin
+ } from 'lucide-react';
+ import { toast } from 'sonner';
+ import { POSTS } from '@/lib/data/blog';
+ import { FREE_TOOLS_LIST, HUB_SECTIONS } from '@/lib/data/hub';
+ import { TEMPLATES } from '@/lib/data/templates';
+ import { RESOURCES } from '@/lib/data/resources';
+-import { PROJECTS, TESTIMONIALS } from '@/lib/data/site';
++import { PROJECTS, TRUST_PILLARS } from '@/lib/data/site';
+ import { AFFILIATE } from '@/lib/config/affiliate';
+ 
+-const ICONS = { Star, Mail, Send, Zap, Shield, BookOpen, Wrench, FileText, Code2, Eye, Clock, ShieldAlert, Briefcase, Layers, GitCompare, HelpCircle, DollarSign, Sparkles };
++const ICONS = { Star, Mail, Send, Zap, Shield, BookOpen, Wrench, FileText, Code2, Eye, Clock, ShieldAlert, Briefcase, Layers, GitCompare, HelpCircle, DollarSign, Sparkles, BadgeCheck, ShieldCheck };
++
++// Accent rotation for colorful cards
++const ACCENT_CYCLE = ['emerald', 'purple', 'amber', 'cyan', 'pink', 'blue'];
++const accentFor = (i) => ACCENT_CYCLE[i % ACCENT_CYCLE.length];
+ 
+ function Reveal({ children, delay = 0, y = 24, className = '' }) {
+   return (
+@@ -32,13 +36,13 @@ function Reveal({ children, delay = 0, y = 24, className = '' }) {
+   );
+ }
+ 
+-function SectionTitle({ eyebrow, title, sub, action }) {
++function SectionTitle({ eyebrow, title, sub, action, eyebrowAccent = 'emerald' }) {
+   return (
+     <div className="flex flex-wrap items-end justify-between gap-6 mb-14">
+       <Reveal>
+         <div>
+-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
+-            <span className="h-px w-8 bg-foreground" /> {eyebrow}
++          <div className={`inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-4 badge-${eyebrowAccent}`}>
++            <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'currentColor' }} /> {eyebrow}
+           </div>
+           <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-balance gradient-text max-w-2xl">{title}</h2>
+           {sub && <p className="mt-4 text-muted-foreground text-lg max-w-xl">{sub}</p>}
+@@ -52,32 +56,34 @@ function SectionTitle({ eyebrow, title, sub, action }) {
+ function Hero() {
+   return (
+     <section className="relative min-h-[100svh] flex items-center pt-28 pb-16 overflow-hidden">
+-      <div className="absolute inset-0 grid-pattern radial-fade opacity-50" />
++      <div className="absolute inset-0 aurora-bg opacity-70" />
++      <div className="absolute inset-0 grid-pattern radial-fade opacity-30" />
+       <div className="absolute inset-0 pointer-events-none">
+-        <div className="absolute top-1/4 -left-40 h-[500px] w-[500px] rounded-full blur-3xl animate-aurora" style={{ background: 'radial-gradient(circle, #0B996E22, transparent 70%)' }} />
+-        <div className="absolute bottom-1/4 -right-40 h-[500px] w-[500px] rounded-full bg-foreground/[0.04] blur-3xl animate-aurora" />
++        <div className="absolute top-1/4 -left-40 h-[500px] w-[500px] rounded-full blur-3xl animate-aurora" style={{ background: 'radial-gradient(circle, hsl(var(--brand-emerald) / 0.25), transparent 70%)' }} />
++        <div className="absolute bottom-1/4 -right-40 h-[500px] w-[500px] rounded-full blur-3xl animate-aurora" style={{ background: 'radial-gradient(circle, hsl(var(--brand-purple) / 0.22), transparent 70%)' }} />
++        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 h-[400px] w-[400px] rounded-full blur-3xl animate-aurora" style={{ background: 'radial-gradient(circle, hsl(var(--brand-amber) / 0.15), transparent 70%)' }} />
+       </div>
+       <div className="container relative z-10">
+         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }} className="max-w-5xl">
+-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-mono uppercase tracking-widest mb-8">
+-            <Mail className="h-3 w-3" /> Email Marketing Hub <span className="text-muted-foreground">+</span> Developer Portfolio
++          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-emerald text-xs font-mono uppercase tracking-widest mb-8">
++            <Mail className="h-3 w-3" /> Email Marketing Hub <span className="opacity-60">+</span> Developer Portfolio
+           </motion.div>
+ 
+           <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-semibold tracking-[-0.04em] leading-[1.05] text-balance break-words">
+             <span className="block gradient-text">Master Email Marketing</span>
+-            <span className="block text-muted-foreground italic font-light">with <span style={{ color: '#0B996E' }} className="not-italic font-semibold">Brevo</span> while building</span>
+-            <span className="block gradient-text">modern software.</span>
++            <span className="block text-muted-foreground italic font-light">with <span className="not-italic font-semibold gradient-text-cool">Brevo</span> while building</span>
++            <span className="block gradient-text-warm">modern software.</span>
+           </h1>
+ 
+           <p className="mt-8 max-w-2xl text-lg md:text-xl text-muted-foreground text-balance">
+-            Premium tutorials, honest reviews, free tools, templates and developer resources for founders and developers. Built by <span className="text-foreground font-medium">Sumitkumar Pandit</span> - Full Stack, AI & Web3 engineer.
++            In-depth tutorials, honest reviews, free tools, templates and developer resources for founders and developers. Built by <span className="text-foreground font-medium">Sumitkumar Pandit</span> - Full Stack, AI & Web3 engineer.
+           </p>
+ 
+           <div className="mt-10 flex flex-wrap gap-3">
+-            <Link href="/email-hub" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-medium hover:opacity-90 transition shadow-lg shadow-foreground/10">
++            <Link href="/email-hub" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition">
+               <BookOpen className="h-4 w-4" /> Start Learning <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+             </Link>
+-            <Link href="/tools/brevo" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium text-white hover:opacity-90 transition shadow-lg" style={{ background: '#0B996E' }}>
++            <Link href="/tools/brevo" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full btn-cool-gradient text-sm font-medium hover:opacity-95 transition">
+               <Star className="h-4 w-4" /> Read Brevo Review <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+             </Link>
+             <Link href="/free-tools" className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass text-sm font-medium hover:bg-accent transition">
+@@ -89,10 +95,10 @@ function Hero() {
+           </div>
+ 
+           <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs font-mono uppercase tracking-widest text-muted-foreground">
+-            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" /> 30+ Guides</span>
+-            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" /> 9 Templates</span>
+-            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" /> 4 Free Tools</span>
+-            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" /> Honest Reviews</span>
++            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-emerald))' }} /> 12 In-Depth Guides</span>
++            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-purple))' }} /> 9 Templates</span>
++            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-amber))' }} /> 4 Free Tools</span>
++            <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-cyan))' }} /> Honest Reviews</span>
+           </div>
+         </motion.div>
+       </div>
+@@ -105,30 +111,25 @@ function FeaturedBrevo() {
+     <section className="py-24">
+       <div className="container">
+         <Reveal>
+-          <Link href="/tools/brevo" className="group block rounded-3xl glass-card p-8 md:p-12 relative overflow-hidden hover:bg-accent/20 transition-all">
+-            <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full blur-3xl" style={{ background: '#0B996E20' }} />
++          <Link href="/tools/brevo" className="group block rounded-3xl glass-card-glow p-8 md:p-12 relative overflow-hidden hover:bg-accent/20 transition-all">
++            <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full blur-3xl" style={{ background: 'hsl(var(--brand-emerald) / 0.25)' }} />
++            <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full blur-3xl" style={{ background: 'hsl(var(--brand-cyan) / 0.18)' }} />
+             <div className="relative grid md:grid-cols-12 gap-8 items-center">
+               <div className="h-20 w-20 rounded-2xl bg-white shadow-lg flex items-center justify-center p-3">
+-                <Image
+-                  src="/logos/Brevo.svg"
+-                  alt="Brevo"
+-                  width={56}
+-                  height={56}
+-                  className="object-contain"
+-                />
++                <Image src="/logos/Brevo.svg" alt="Brevo" width={56} height={56} className="object-contain" />
+               </div>
+               <div className="md:col-span-7">
+-                <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-3">Featured Review · Editor&apos;s Pick</p>
++                <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: 'hsl(var(--brand-emerald))' }}>Featured Review · Editor&apos;s Pick</p>
+                 <h2 className="font-display text-3xl md:text-5xl font-semibold tracking-tight gradient-text mb-3">Brevo - The Complete Review</h2>
+                 <p className="text-muted-foreground text-lg">All-in-one email marketing, transactional SMTP, automation, CRM &amp; SMS. The best-priced platform for developers and startups in 2025.</p>
+                 <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
+-                  <span className="flex items-center gap-1">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-foreground text-foreground" />)}<span className="ml-1 font-medium text-foreground">4.7</span></span>
++                  <span className="flex items-center gap-1">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-amber))', fill: 'hsl(var(--brand-amber))' }} />)}<span className="ml-1 font-medium text-foreground">4.7</span></span>
+                   <span>· 8 min read</span>
+                   <span>· Updated June 2025</span>
+                 </div>
+               </div>
+               <div className="md:col-span-3 flex md:justify-end">
+-                <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-foreground text-background text-sm font-medium">Read review <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></span>
++                <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full btn-primary-gradient text-sm font-medium">Read review <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></span>
+               </div>
+             </div>
+           </Link>
+@@ -143,15 +144,15 @@ function LatestTutorials() {
+   return (
+     <section className="py-24">
+       <div className="container">
+-        <SectionTitle eyebrow="Latest Tutorials" title="Writing on email, code & craft." sub="Honest, in-depth articles on email marketing, Brevo, SMTP, AI and modern web development." action={
++        <SectionTitle eyebrowAccent="purple" eyebrow="Latest Tutorials" title="Writing on email, code & craft." sub="Honest, in-depth articles on email marketing, Brevo, SMTP, AI and modern web development." action={
+           <Link href="/blog" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition">Browse blog <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link>
+         } />
+         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+           {latest.map((p, i) => (
+             <Reveal key={p.slug} delay={i * 0.04}>
+               <Link href={`/blog/${p.slug}`} className="group glass-card rounded-2xl p-6 h-full block hover:bg-accent/40 transition-all duration-500 hover:-translate-y-1">
+-                <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-3">{p.category}</p>
+-                <h3 className="font-display text-lg font-semibold mb-3 leading-snug group-hover:text-foreground transition">{p.title}</h3>
++                <p className={`text-xs font-mono uppercase tracking-widest mb-3 inline-block px-2 py-0.5 rounded-full badge-${accentFor(i)}`}>{p.category}</p>
++                <h3 className="font-display text-lg font-semibold mb-3 mt-2 leading-snug group-hover:text-foreground transition">{p.title}</h3>
+                 <p className="text-sm text-muted-foreground mb-5 leading-relaxed line-clamp-3">{p.excerpt}</p>
+                 <div className="flex items-center justify-between pt-4 border-t border-border text-xs text-muted-foreground">
+                   <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> {p.readTime}</span>
+@@ -170,17 +171,18 @@ function FreeToolsSection() {
+   return (
+     <section className="py-24">
+       <div className="container">
+-        <SectionTitle eyebrow="Free Tools" title="Free, fast, no signup." sub="Interactive tools that solve real problems for email senders. All in your browser." action={
++        <SectionTitle eyebrowAccent="amber" eyebrow="Free Tools" title="Free, fast, no signup." sub="Interactive tools that solve real problems for email senders. All in your browser." action={
+           <Link href="/free-tools" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition">All tools <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link>
+         } />
+         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+           {FREE_TOOLS_LIST.map((t, i) => {
+             const Icon = ICONS[t.icon] || Wrench;
++            const acc = accentFor(i);
+             return (
+               <Reveal key={t.slug} delay={i * 0.05}>
+                 <Link href={`/free-tools/${t.slug}`} className="group glass-card rounded-2xl p-6 h-full block hover:bg-accent/40 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden">
+-                  {t.tag && <span className="absolute top-4 right-4 text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-full bg-foreground text-background">{t.tag}</span>}
+-                  <div className="h-11 w-11 rounded-xl bg-foreground text-background flex items-center justify-center mb-5 group-hover:scale-110 transition"><Icon className="h-5 w-5" /></div>
++                  {t.tag && <span className={`absolute top-4 right-4 text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-full badge-${acc}`}>{t.tag}</span>}
++                  <div className={`h-11 w-11 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition icon-${acc} shadow-lg`}><Icon className="h-5 w-5" /></div>
+                   <h3 className="font-display font-semibold mb-2">{t.title}</h3>
+                   <p className="text-sm text-muted-foreground leading-relaxed">{t.desc}</p>
+                 </Link>
+@@ -198,23 +200,26 @@ function TemplatesSection() {
+   return (
+     <section className="py-24">
+       <div className="container">
+-        <SectionTitle eyebrow="Templates" title="Production-ready email templates." sub="9 battle-tested HTML email templates. Copy, customize, ship. All variables documented." action={
++        <SectionTitle eyebrowAccent="cyan" eyebrow="Templates" title="Production-ready email templates." sub="9 battle-tested HTML email templates. Copy, customize, ship. All variables documented." action={
+           <Link href="/templates" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition">All templates <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link>
+         } />
+         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+-          {preview.map((t, i) => (
+-            <Reveal key={t.slug} delay={i * 0.04}>
+-              <Link href={`/templates/${t.slug}`} className="group glass-card rounded-2xl p-6 h-full block hover:bg-accent/40 transition-all duration-500">
+-                <div className="flex items-center justify-between mb-4">
+-                  <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">{t.category}</span>
+-                  <FileText className="h-4 w-4 text-muted-foreground" />
+-                </div>
+-                <h3 className="font-display font-semibold mb-2">{t.name}</h3>
+-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-2">{t.desc}</p>
+-                <p className="text-xs font-mono text-muted-foreground border-t border-border pt-3 truncate">Subject: {t.subject}</p>
+-              </Link>
+-            </Reveal>
+-          ))}
++          {preview.map((t, i) => {
++            const acc = accentFor(i);
++            return (
++              <Reveal key={t.slug} delay={i * 0.04}>
++                <Link href={`/templates/${t.slug}`} className="group glass-card rounded-2xl p-6 h-full block hover:bg-accent/40 transition-all duration-500">
++                  <div className="flex items-center justify-between mb-4">
++                    <span className={`text-xs font-mono uppercase tracking-widest px-2 py-0.5 rounded-full badge-${acc}`}>{t.category}</span>
++                    <FileText className="h-4 w-4 text-muted-foreground" />
++                  </div>
++                  <h3 className="font-display font-semibold mb-2">{t.name}</h3>
++                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-2">{t.desc}</p>
++                  <p className="text-xs font-mono text-muted-foreground border-t border-border pt-3 truncate">Subject: {t.subject}</p>
++                </Link>
++              </Reveal>
++            );
++          })}
+         </div>
+       </div>
+     </section>
+@@ -225,15 +230,16 @@ function ResourcesSection() {
+   return (
+     <section className="py-24">
+       <div className="container">
+-        <SectionTitle eyebrow="Developer Resources" title="Reference, not fluff." sub="Glossaries, checklists and authentication guides. Bookmark them - you will need them." />
++        <SectionTitle eyebrowAccent="pink" eyebrow="Developer Resources" title="Reference, not fluff." sub="Glossaries, checklists and authentication guides. Bookmark them - you will need them." />
+         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+           {RESOURCES.map((r, i) => {
+             const Icon = { BookOpen, Shield, CheckCircle2, Code2 }[r.icon] || BookOpen;
++            const acc = accentFor(i);
+             return (
+               <Reveal key={r.slug} delay={i * 0.05}>
+                 <Link href={`/resources/${r.slug}`} className="group glass-card rounded-2xl p-6 h-full block hover:bg-accent/40 transition-all duration-500 hover:-translate-y-1">
+                   <div className="flex items-center justify-between mb-4">
+-                    <div className="h-11 w-11 rounded-xl bg-foreground text-background flex items-center justify-center"><Icon className="h-5 w-5" /></div>
++                    <div className={`h-11 w-11 rounded-xl flex items-center justify-center icon-${acc} shadow-lg`}><Icon className="h-5 w-5" /></div>
+                     <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{r.type}</span>
+                   </div>
+                   <h3 className="font-display font-semibold mb-2 leading-snug">{r.title}</h3>
+@@ -255,27 +261,29 @@ function AboutBrief() {
+       <div className="container">
+         <div className="grid lg:grid-cols-12 gap-10 items-center">
+           <Reveal className="lg:col-span-7">
+-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground mb-4">
+-              <span className="h-px w-8 bg-foreground" /> About
++            <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-4 badge-blue">
++              <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'currentColor' }} /> About
+             </div>
+             <h2 className="font-display text-4xl md:text-5xl font-semibold tracking-tight gradient-text mb-6">Built by an engineer who ships.</h2>
+-            <p className="text-muted-foreground text-lg mb-4 leading-relaxed">I&apos;m Sumitkumar Pandit - M.Sc. IT student, Full Stack Developer, AI Engineer and Web3 builder. I write about the tools I actually use and the email infrastructure I run in production.</p>
+-            <p className="text-muted-foreground text-lg leading-relaxed">Everything on this site - the reviews, the templates, the tools - is shaped by real shipping experience. No fluff, no hype.</p>
+-            <div className="mt-6 flex gap-3">
+-              <Link href="/portfolio" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background text-sm font-medium hover:opacity-90 transition">My Portfolio <ArrowRight className="h-4 w-4" /></Link>
+-              <Link href="/portfolio#contact" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition">Get in touch</Link>
++            <p className="text-muted-foreground text-lg mb-4 leading-relaxed">I&apos;m <span className="text-foreground font-medium">Sumitkumar Pandit</span> - M.Sc. IT student (CGPA 9.85), Full Stack Developer, AI Engineer and Web3 builder. I write about the tools I actually use and the email infrastructure I run in production.</p>
++            <p className="text-muted-foreground text-lg leading-relaxed">Everything on this site - the reviews, the templates, the tools - is shaped by real shipping experience. No fluff, no hype, no invented social proof.</p>
++            <div className="mt-6 flex flex-wrap gap-3">
++              <Link href="/about-author" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition">About the Author <ArrowRight className="h-4 w-4" /></Link>
++              <Link href="/portfolio" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition">My Portfolio</Link>
++              <a href="https://github.com/SUMIT4859" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition"><Github className="h-4 w-4" /> GitHub</a>
++              <a href="https://www.linkedin.com/in/sumit-kumar4859" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition"><Linkedin className="h-4 w-4" /> LinkedIn</a>
+             </div>
+           </Reveal>
+           <Reveal delay={0.1} className="lg:col-span-5">
+-            <div className="glass-card rounded-3xl p-7 grid grid-cols-2 gap-6">
++            <div className="glass-card-glow rounded-3xl p-7 grid grid-cols-2 gap-6">
+               {[
+-                { label: 'M.Sc. CGPA', value: '9.85' },
+-                { label: 'B.Sc. CGPA', value: '9.73' },
+-                { label: 'Projects', value: '25+' },
+-                { label: 'GitHub Stars', value: '500+' },
++                { label: 'M.Sc. CGPA', value: '9.85', accent: 'emerald' },
++                { label: 'B.Sc. CGPA', value: '9.73', accent: 'purple' },
++                { label: 'Live Projects', value: '8', accent: 'amber' },
++                { label: 'Open Source', value: '20+', accent: 'cyan' },
+               ].map(s => (
+                 <div key={s.label}>
+-                  <p className="font-display text-4xl font-semibold gradient-text">{s.value}</p>
++                  <p className={`font-display text-4xl font-semibold`} style={{ color: `hsl(var(--brand-${s.accent}))` }}>{s.value}</p>
+                   <p className="mt-1 text-xs font-mono uppercase tracking-widest text-muted-foreground">{s.label}</p>
+                 </div>
+               ))}
+@@ -292,49 +300,67 @@ function ProjectsPreview() {
+   return (
+     <section id="projects" className="py-24">
+       <div className="container">
+-        <SectionTitle eyebrow="Projects" title="Recent work." action={
++        <SectionTitle eyebrowAccent="emerald" eyebrow="Projects" title="Recent work." action={
+           <Link href="/portfolio#projects" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-sm font-medium hover:bg-accent transition">All projects <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link>
+         } />
+         <div className="grid md:grid-cols-3 gap-4">
+-          {featured.map((p, i) => (
+-            <Reveal key={p.slug} delay={i * 0.05}>
+-              <div className="group glass-card rounded-2xl p-6 h-full hover:bg-accent/40 transition-all duration-500">
+-                <div className="flex flex-wrap gap-1.5 mb-3">
+-                  {p.tags.map(t => <span key={t} className="text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md bg-foreground/5 border border-border">{t}</span>)}
++          {featured.map((p, i) => {
++            const acc = accentFor(i);
++            return (
++              <Reveal key={p.slug} delay={i * 0.05}>
++                <div className="group glass-card rounded-2xl p-6 h-full hover:bg-accent/40 transition-all duration-500">
++                  <div className="flex flex-wrap gap-1.5 mb-3">
++                    {p.tags.map(t => <span key={t} className={`text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-md badge-${acc}`}>{t}</span>)}
++                  </div>
++                  <h3 className="font-display text-lg font-semibold mb-2">{p.title}</h3>
++                  <p className="text-sm text-muted-foreground leading-relaxed">{p.description}</p>
+                 </div>
+-                <h3 className="font-display text-lg font-semibold mb-2">{p.title}</h3>
+-                <p className="text-sm text-muted-foreground leading-relaxed">{p.description}</p>
+-              </div>
+-            </Reveal>
+-          ))}
++              </Reveal>
++            );
++          })}
+         </div>
+       </div>
+     </section>
+   );
+ }
+ 
+-function TestimonialsSection() {
++// REPLACED fake testimonials with honest trust pillars.
++function TrustPillarsSection() {
+   return (
+     <section className="py-24">
+       <div className="container">
+-        <SectionTitle eyebrow="Testimonials" title="Trusted by founders & teams." />
+-        <div className="grid md:grid-cols-3 gap-4">
+-          {TESTIMONIALS.map((t, i) => (
+-            <Reveal key={i} delay={i * 0.06}>
+-              <div className="glass-card rounded-3xl p-7 h-full">
+-                <Quote className="h-6 w-6 text-foreground/20 mb-4" />
+-                <p className="text-foreground/90 mb-6 leading-relaxed">&ldquo;{t.quote}&rdquo;</p>
+-                <div className="flex items-center gap-3 pt-5 border-t border-border">
+-                  <div className="h-10 w-10 rounded-full bg-foreground/10 flex items-center justify-center font-display font-semibold">{t.name.split(' ').map(n => n[0]).join('')}</div>
++        <SectionTitle
++          eyebrowAccent="emerald"
++          eyebrow="Why This Hub"
++          title="Trust signals, not fake testimonials."
++          sub="This site does not fake social proof. Instead, here is exactly what you get - and what we promise."
++        />
++        <div className="grid md:grid-cols-2 gap-4">
++          {TRUST_PILLARS.map((p, i) => {
++            const Icon = ICONS[p.icon] || BadgeCheck;
++            return (
++              <Reveal key={i} delay={i * 0.06}>
++                <div className="glass-card rounded-3xl p-7 h-full flex gap-5">
++                  <div className={`shrink-0 h-12 w-12 rounded-xl icon-${p.accent} flex items-center justify-center shadow-lg`}>
++                    <Icon className="h-5 w-5" />
++                  </div>
+                   <div>
+-                    <p className="font-medium text-sm">{t.name}</p>
+-                    <p className="text-xs text-muted-foreground">{t.role}</p>
++                    <h3 className="font-display text-lg font-semibold mb-2">{p.title}</h3>
++                    <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+                   </div>
+                 </div>
+-              </div>
+-            </Reveal>
+-          ))}
++              </Reveal>
++            );
++          })}
+         </div>
++        <Reveal delay={0.2}>
++          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs">
++            <Link href="/affiliate-disclosure" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full glass hover:bg-accent transition text-muted-foreground hover:text-foreground">Affiliate Disclosure</Link>
++            <Link href="/privacy-policy" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full glass hover:bg-accent transition text-muted-foreground hover:text-foreground">Privacy Policy</Link>
++            <Link href="/terms" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full glass hover:bg-accent transition text-muted-foreground hover:text-foreground">Terms of Service</Link>
++            <Link href="/about-author" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full glass hover:bg-accent transition text-muted-foreground hover:text-foreground">About the Author</Link>
++          </div>
++        </Reveal>
+       </div>
+     </section>
+   );
+@@ -357,15 +383,16 @@ function NewsletterCTA() {
+     <section className="py-24">
+       <div className="container">
+         <Reveal>
+-          <div className="glass-card rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
+-            <div className="absolute inset-0 grid-pattern radial-fade opacity-30" />
++          <div className="glass-card-glow rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
++            <div className="absolute inset-0 aurora-bg opacity-70" />
++            <div className="absolute inset-0 grid-pattern radial-fade opacity-20" />
+             <div className="relative max-w-2xl mx-auto">
+-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-mono uppercase tracking-widest mb-6"><Mail className="h-3 w-3" /> Newsletter</div>
++              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-emerald text-xs font-mono uppercase tracking-widest mb-6"><Mail className="h-3 w-3" /> Newsletter</div>
+               <h2 className="font-display text-3xl md:text-5xl font-semibold tracking-tight gradient-text mb-4">Email tips you will actually use.</h2>
+               <p className="text-muted-foreground mb-8">One email per month on Brevo, SMTP, deliverability and shipping software. No spam - the irony would be too much.</p>
+               <form onSubmit={sub} className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+-                <input value={email} onChange={e => setEmail(e.target.value)} required type="email" placeholder="you@example.com" className="flex-1 bg-transparent border border-border rounded-full px-5 py-3 text-sm outline-none focus:border-foreground transition" />
+-                <button disabled={loading} className="px-6 py-3 rounded-full bg-foreground text-background text-sm font-medium hover:opacity-90 transition disabled:opacity-50">{loading ? '...' : 'Subscribe'}</button>
++                <input value={email} onChange={e => setEmail(e.target.value)} required type="email" placeholder="you@example.com" className="flex-1 bg-background/60 border border-border rounded-full px-5 py-3 text-sm outline-none focus:border-primary transition" />
++                <button disabled={loading} className="px-6 py-3 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition disabled:opacity-50">{loading ? '...' : 'Subscribe'}</button>
+               </form>
+             </div>
+           </div>
+@@ -386,7 +413,7 @@ function App() {
+       <ResourcesSection />
+       <AboutBrief />
+       <ProjectsPreview />
+-      <TestimonialsSection />
++      <TrustPillarsSection />
+       <NewsletterCTA />
+     </>
+   );
+diff --git a/app/portfolio/page.js b/app/portfolio/page.js
+index e658aa1..096a2f1 100644
+--- a/app/portfolio/page.js
++++ b/app/portfolio/page.js
+@@ -398,6 +398,8 @@ function Achievements() {
+ }
+ 
+ function Testimonials() {
++  // Trust pillars instead of fake testimonials - proves credibility without fabricated quotes.
++  if (!TESTIMONIALS || TESTIMONIALS.length === 0) return null;
+   return (
+     <section className="py-32 relative">
+       <div className="container">
+@@ -529,10 +531,10 @@ function OpenSource() {
+             <div className="absolute inset-0 grid-pattern opacity-20 radial-fade" />
+             <div className="relative grid sm:grid-cols-4 gap-6">
+               {[
+-                { label: 'Public Repos', value: '30+' },
+-                { label: 'Stars Earned', value: '500+' },
+-                { label: 'Contributions', value: '1,200+' },
+-                { label: 'Followers', value: '120+' },
++                { label: 'Public Repos', value: '20+' },
++                { label: 'Live Projects', value: '8' },
++                { label: 'Contributions', value: 'Active' },
++                { label: 'Open Source', value: 'Yes' },
+               ].map(s => (
+                 <div key={s.label} className="text-center sm:text-left">
+                   <p className="font-display text-3xl md:text-4xl font-semibold tracking-tight gradient-text">{s.value}</p>
+diff --git a/app/privacy-policy/page.js b/app/privacy-policy/page.js
+new file mode 100644
+index 0000000..a144b6e
+--- /dev/null
++++ b/app/privacy-policy/page.js
+@@ -0,0 +1,81 @@
++import Link from 'next/link';
++import { Shield, Mail } from 'lucide-react';
++
++export const metadata = {
++  title: 'Privacy Policy',
++  description: 'How Sumitkumar Pandit\'s email marketing hub (codedbysumit.com) collects, uses and protects your data.',
++  alternates: { canonical: '/privacy-policy' },
++};
++
++const updated = 'June 2025';
++
++export default function PrivacyPolicyPage() {
++  return (
++    <div className="pt-32 pb-24">
++      <div className="container max-w-3xl">
++        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-emerald text-xs font-mono uppercase tracking-widest mb-6"><Shield className="h-3 w-3" /> Legal</div>
++        <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-4">Privacy Policy</h1>
++        <p className="text-muted-foreground">Last updated: {updated}</p>
++
++        <div className="prose prose-neutral dark:prose-invert max-w-none mt-10 space-y-8">
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">1. Who we are</h2>
++            <p className="text-muted-foreground leading-relaxed">This website (<b>codedbysumit.com</b>) is owned and operated by <b>Sumitkumar Pandit</b>, an independent developer based in India. You can reach us at <a className="underline" href="mailto:hello@codedbysumit.com">hello@codedbysumit.com</a>.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">2. What we collect</h2>
++            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
++              <li><b>Email address</b> - only if you voluntarily subscribe to our newsletter.</li>
++              <li><b>Analytics data</b> - anonymous page views, referrers and device info via Google Analytics, Microsoft Clarity and Vercel Analytics.</li>
++              <li><b>Cookies</b> - required for theme preferences and analytics. No third-party ad cookies are set.</li>
++            </ul>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">3. How we use it</h2>
++            <p className="text-muted-foreground leading-relaxed">Emails are used solely to send our monthly newsletter about email marketing, Brevo, developer tools and product updates. Analytics data is used to understand which content is useful and to improve the site. We never sell your data.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">4. Third-party services</h2>
++            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
++              <li><b>Brevo</b> - newsletter delivery.</li>
++              <li><b>Vercel</b> - hosting &amp; analytics.</li>
++              <li><b>Google Analytics</b> &amp; <b>Microsoft Clarity</b> - anonymous usage analytics.</li>
++              <li><b>Affiliate networks</b> - some outbound links (see our <Link href="/affiliate-disclosure" className="underline">affiliate disclosure</Link>).</li>
++            </ul>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">5. Your rights (GDPR &amp; CCPA)</h2>
++            <p className="text-muted-foreground leading-relaxed">You may request access to, correction of, or deletion of your personal data at any time by emailing <a className="underline" href="mailto:hello@codedbysumit.com">hello@codedbysumit.com</a>. Newsletter subscribers can unsubscribe with one click from any email we send.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">6. Data retention</h2>
++            <p className="text-muted-foreground leading-relaxed">Newsletter data is kept until you unsubscribe. Analytics data is retained for 14 months (Google Analytics default). No sensitive personal data is stored on this site.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">7. Children</h2>
++            <p className="text-muted-foreground leading-relaxed">This site is not directed at children under 13, and we do not knowingly collect any information from children.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">8. Changes</h2>
++            <p className="text-muted-foreground leading-relaxed">We may update this policy periodically. The “Last updated” date at the top always reflects the latest version.</p>
++          </section>
++
++          <div className="glass-card rounded-2xl p-6 mt-10 flex gap-4 items-start">
++            <div className="h-10 w-10 rounded-xl icon-emerald flex items-center justify-center shrink-0"><Mail className="h-4 w-4" /></div>
++            <div>
++              <p className="font-medium">Questions about your data?</p>
++              <p className="text-sm text-muted-foreground">Write to <a href="mailto:hello@codedbysumit.com" className="underline">hello@codedbysumit.com</a> - we typically reply within 48 hours.</p>
++            </div>
++          </div>
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/app/terms/page.js b/app/terms/page.js
+new file mode 100644
+index 0000000..b2fc21c
+--- /dev/null
++++ b/app/terms/page.js
+@@ -0,0 +1,77 @@
++import Link from 'next/link';
++import { FileText, Mail } from 'lucide-react';
++
++export const metadata = {
++  title: 'Terms of Service',
++  description: 'The rules for using codedbysumit.com - our email marketing hub, free tools and content.',
++  alternates: { canonical: '/terms' },
++};
++
++const updated = 'June 2025';
++
++export default function TermsPage() {
++  return (
++    <div className="pt-32 pb-24">
++      <div className="container max-w-3xl">
++        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-purple text-xs font-mono uppercase tracking-widest mb-6"><FileText className="h-3 w-3" /> Legal</div>
++        <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight gradient-text mb-4">Terms of Service</h1>
++        <p className="text-muted-foreground">Last updated: {updated}</p>
++
++        <div className="mt-10 space-y-8">
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">1. Acceptance</h2>
++            <p className="text-muted-foreground leading-relaxed">By accessing or using <b>codedbysumit.com</b> (“the site”), you agree to these Terms of Service. If you do not agree, please do not use the site.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">2. Content &amp; intellectual property</h2>
++            <p className="text-muted-foreground leading-relaxed">All original articles, guides, code snippets, tools and images on this site are the intellectual property of Sumitkumar Pandit unless stated otherwise. You may quote short excerpts with credit and a link back. Republishing full articles without written permission is not permitted.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">3. Free tools</h2>
++            <p className="text-muted-foreground leading-relaxed">Our free tools (Spam Score Checker, Send-Time Calculator, HTML Preview, Subject Line Generator) run entirely in your browser and are provided “as is” without warranty. We are not liable for decisions you make based on their output.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">4. Affiliate links</h2>
++            <p className="text-muted-foreground leading-relaxed">Some outbound links on this site are affiliate links. We may earn a commission at no extra cost to you when you sign up through them. See our <Link href="/affiliate-disclosure" className="underline">Affiliate Disclosure</Link> for full details.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">5. Third-party services</h2>
++            <p className="text-muted-foreground leading-relaxed">Reviews and tutorials reference third-party platforms (Brevo, Vercel, GitHub, etc.). We are not affiliated with those companies except where explicitly stated, and we are not responsible for their pricing, features or policies changing over time.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">6. No professional advice</h2>
++            <p className="text-muted-foreground leading-relaxed">Content on this site is educational. It does not constitute legal, financial, or professional advice. Always verify critical decisions with a qualified expert.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">7. Limitation of liability</h2>
++            <p className="text-muted-foreground leading-relaxed">To the fullest extent permitted by law, Sumitkumar Pandit is not liable for any indirect, incidental, or consequential damages arising from your use of the site or its content.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">8. Changes to these terms</h2>
++            <p className="text-muted-foreground leading-relaxed">We may update these terms at any time. Continued use of the site after changes means you accept the updated version.</p>
++          </section>
++
++          <section>
++            <h2 className="font-display text-2xl font-semibold mb-3">9. Contact</h2>
++            <p className="text-muted-foreground leading-relaxed">Questions about these terms? Email <a href="mailto:hello@codedbysumit.com" className="underline">hello@codedbysumit.com</a>.</p>
++          </section>
++
++          <div className="glass-card rounded-2xl p-6 mt-10 flex gap-4 items-start">
++            <div className="h-10 w-10 rounded-xl icon-purple flex items-center justify-center shrink-0"><Mail className="h-4 w-4" /></div>
++            <div>
++              <p className="font-medium">Need clarification?</p>
++              <p className="text-sm text-muted-foreground">Write to <a href="mailto:hello@codedbysumit.com" className="underline">hello@codedbysumit.com</a>.</p>
++            </div>
++          </div>
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/app/tools/[slug]/brevo-page.jsx b/app/tools/[slug]/brevo-page.jsx
+index b4872d3..8987b61 100644
+--- a/app/tools/[slug]/brevo-page.jsx
++++ b/app/tools/[slug]/brevo-page.jsx
+@@ -11,9 +11,9 @@ import {
+ } from 'lucide-react';
+ import { toast } from 'sonner';
+ 
+-const AFFILIATE_URL = '#'; // Replaced via central config below
+ import { AFFILIATE } from '@/lib/config/affiliate';
+-const BREVO_AFFILIATE = AFFILIATE.brevo.url;
++// Single source of truth for the affiliate URL - swap in lib/config/affiliate.js.
++const AFFILIATE_URL = AFFILIATE.brevo.url;
+ 
+ const TOC = [
+   { id: 'what-is-brevo', label: 'What is Brevo?' },
+@@ -195,7 +195,7 @@ export default function BrevoPage({ tool }) {
+               </div>
+ 
+               <div className="mt-8 flex flex-wrap gap-3">
+-                <a href={AFFILIATE_URL} target="_blank" rel="noopener noreferrer sponsored" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-medium hover:opacity-90 transition shadow-lg shadow-foreground/10">
++                <a href={AFFILIATE_URL} target="_blank" rel="noopener noreferrer sponsored" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition">
+                   Visit Brevo <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                 </a>
+                 <button onClick={() => share('twitter')} className="inline-flex items-center gap-2 px-4 py-3 rounded-full glass text-sm hover:bg-accent transition"><Twitter className="h-4 w-4" /></button>
+@@ -276,7 +276,7 @@ export default function BrevoPage({ tool }) {
+                     <ul className="space-y-2 mb-6">
+                       {p.features.map(f => <li key={f} className="flex items-start gap-2 text-sm"><Check className="h-4 w-4 mt-0.5 shrink-0" /> {f}</li>)}
+                     </ul>
+-                    <a href={AFFILIATE_URL} target="_blank" rel="noopener noreferrer sponsored" className={`w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-full text-sm font-medium transition ${p.highlight ? 'bg-foreground text-background hover:opacity-90' : 'border border-border hover:bg-accent'}`}>{p.cta} <ArrowUpRight className="h-3.5 w-3.5" /></a>
++                  <a href={AFFILIATE_URL} target="_blank" rel="noopener noreferrer sponsored" className={`w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-full text-sm font-medium transition ${p.highlight ? 'btn-primary-gradient hover:opacity-95' : 'border border-border hover:bg-accent'}`}>{p.cta} <ArrowUpRight className="h-3.5 w-3.5" /></a>
+                   </div>
+                 ))}
+               </div>
+@@ -302,13 +302,14 @@ export default function BrevoPage({ tool }) {
+ 
+             <Section id="experience">
+               <H2>My Experience</H2>
+-              <div className="glass-card rounded-3xl p-8 relative">
+-                <Quote className="h-8 w-8 text-foreground/20 mb-4" />
++              <div className="glass-card-glow rounded-3xl p-8 relative">
++                <Quote className="h-8 w-8 mb-4" style={{ color: 'hsl(var(--brand-emerald))' }} />
+                 <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
+-                  <p>I started using Brevo for a side-project that needed transactional email - password resets and order receipts. The free SMTP plan handled it without breaking a sweat.</p>
+-                  <p>What surprised me later was how natural the upgrade path felt. As my project grew, I migrated my newsletter into the same dashboard, added a welcome-series automation, and started using the lightweight CRM to track outreach. Three tools collapsed into one.</p>
+-                  <p className="text-foreground">If you&apos;re a developer building a SaaS, an indie hacker shipping side-projects, or a small business owner who refuses to juggle five SaaS subscriptions - Brevo is the easy recommendation.</p>
+-                  <p className="text-sm italic">Note: This section is editable from the admin panel - I keep it updated as my usage evolves.</p>
++                  <p>I first reached for Brevo when a side-project of mine started outgrowing Gmail SMTP for password-reset and receipt emails. What I needed was a reliable relay that would not silently start throttling once traffic picked up - and would not cost enterprise money on day one.</p>
++                  <p>The <span className="text-foreground font-medium">free plan (300 emails/day, unlimited contacts)</span> covered the entire early phase. Setup was standard SMTP: create a sender, verify the domain with SPF, DKIM and a DMARC record, plug the credentials into my Node service, done. First transactional email went out in under an hour.</p>
++                  <p>Over the following weeks I added a small newsletter for the same project. Instead of running a second SaaS just for marketing mail, I moved that into Brevo too - drag-and-drop editor for the campaign, a two-step welcome automation, and the lightweight CRM to keep track of who signed up from where. Three tools collapsed into one dashboard.</p>
++                  <p className="text-foreground">If you are a developer building a SaaS, an indie hacker shipping side-projects, or a small business owner who refuses to juggle five separate SaaS subscriptions - Brevo is the honest recommendation. It is not the flashiest, but the pricing model (per email volume, not per contact) is the single most founder-friendly decision in the market.</p>
++                  <p className="text-sm">Full disclosure: some links on this page are affiliate links. See our <Link href="/affiliate-disclosure" className="underline">affiliate disclosure</Link>.</p>
+                 </div>
+               </div>
+             </Section>
+@@ -386,7 +387,7 @@ export default function BrevoPage({ tool }) {
+                 <div className="relative">
+                   <h3 className="font-display text-3xl md:text-5xl font-semibold tracking-tight gradient-text mb-4">Ready to try Brevo?</h3>
+                   <p className="text-muted-foreground max-w-xl mx-auto mb-8">Start free - no credit card required. Send up to 300 emails per day with unlimited contacts.</p>
+-                  <a href={AFFILIATE_URL} target="_blank" rel="noopener noreferrer sponsored" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-foreground text-background font-medium hover:opacity-90 transition">
++                  <a href={AFFILIATE_URL} target="_blank" rel="noopener noreferrer sponsored" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full btn-primary-gradient font-medium hover:opacity-95 transition">
+                     Visit Brevo <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                   </a>
+                 </div>
+diff --git a/components/Footer.jsx b/components/Footer.jsx
+index 115b208..b6e699b 100644
+--- a/components/Footer.jsx
++++ b/components/Footer.jsx
+@@ -1,6 +1,6 @@
+ 'use client';
+ import Link from 'next/link';
+-import { Github, Linkedin, Twitter, Mail, ArrowUpRight } from 'lucide-react';
++import { Github, Linkedin, Twitter, Mail, ArrowUpRight, Shield, FileText, DollarSign, BadgeCheck } from 'lucide-react';
+ import { toast } from 'sonner';
+ import { useState } from 'react';
+ 
+@@ -22,22 +22,26 @@ export default function Footer() {
+ 
+   return (
+     <footer className="relative border-t border-border mt-32">
+-      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-foreground/30 to-transparent" />
++      <div className="absolute inset-x-0 -top-px h-px" style={{ background: 'linear-gradient(90deg, transparent, hsl(var(--brand-emerald) / 0.5), hsl(var(--brand-purple) / 0.5), hsl(var(--brand-amber) / 0.5), transparent)' }} />
+       <div className="container py-16">
+         <div className="grid md:grid-cols-12 gap-12">
+           <div className="md:col-span-5">
+             <h3 className="font-display text-3xl md:text-4xl font-semibold tracking-tight">
+-              Let&apos;s build something <span className="italic font-light">extraordinary</span>.
++              Let&apos;s build something <span className="italic font-light gradient-text-warm">extraordinary</span>.
+             </h3>
+             <p className="mt-4 text-muted-foreground max-w-md">Get monthly insights on AI, Web3, Next.js and modern engineering - straight to your inbox.</p>
+             <form onSubmit={subscribe} className="mt-6 flex gap-2 max-w-md">
+-              <input value={email} onChange={e => setEmail(e.target.value)} type="email" required placeholder="you@example.com" className="flex-1 bg-transparent border border-border rounded-full px-5 py-3 text-sm outline-none focus:border-foreground transition" />
+-              <button disabled={loading} className="px-5 py-3 rounded-full bg-foreground text-background text-sm font-medium hover:opacity-90 transition disabled:opacity-50">
++              <input value={email} onChange={e => setEmail(e.target.value)} type="email" required placeholder="you@example.com" className="flex-1 bg-background/60 border border-border rounded-full px-5 py-3 text-sm outline-none focus:border-primary transition" />
++              <button disabled={loading} className="px-5 py-3 rounded-full btn-primary-gradient text-sm font-medium hover:opacity-95 transition disabled:opacity-50">
+                 {loading ? '...' : 'Subscribe'}
+               </button>
+             </form>
++
++            <div className="mt-6 inline-flex items-center gap-2 text-xs text-muted-foreground px-3 py-1.5 rounded-full glass">
++              <BadgeCheck className="h-3.5 w-3.5" style={{ color: 'hsl(var(--brand-emerald))' }} /> Published by <span className="text-foreground font-medium">Sumitkumar Pandit</span> · real domain, real name, real GitHub.
++            </div>
+           </div>
+-          <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
++          <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-8">
+             <div>
+               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Explore</p>
+               <ul className="space-y-2.5 text-sm">
+@@ -51,17 +55,26 @@ export default function Footer() {
+             <div>
+               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Resources</p>
+               <ul className="space-y-2.5 text-sm">
+-                <li><Link href="/free-tools" className="hover:text-foreground text-muted-foreground transition">Free-Tools</Link></li>
++                <li><Link href="/free-tools" className="hover:text-foreground text-muted-foreground transition">Free Tools</Link></li>
+                 <li><Link href="/templates" className="hover:text-foreground text-muted-foreground transition">Templates</Link></li>
+                 <li><Link href="/tools/brevo" className="hover:text-foreground text-muted-foreground transition">Brevo Review</Link></li>
+                 <li><Link href="/blog" className="hover:text-foreground text-muted-foreground transition">Blog</Link></li>
+                 <li><Link href="/portfolio#contact" className="hover:text-foreground text-muted-foreground transition">Contact</Link></li>
+               </ul>
+             </div>
++            <div>
++              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Legal</p>
++              <ul className="space-y-2.5 text-sm">
++                <li><Link href="/privacy-policy" className="hover:text-foreground text-muted-foreground transition inline-flex items-center gap-1.5"><Shield className="h-3 w-3" /> Privacy Policy</Link></li>
++                <li><Link href="/terms" className="hover:text-foreground text-muted-foreground transition inline-flex items-center gap-1.5"><FileText className="h-3 w-3" /> Terms of Service</Link></li>
++                <li><Link href="/affiliate-disclosure" className="hover:text-foreground text-muted-foreground transition inline-flex items-center gap-1.5"><DollarSign className="h-3 w-3" /> Affiliate Disclosure</Link></li>
++                <li><Link href="/about-author" className="hover:text-foreground text-muted-foreground transition inline-flex items-center gap-1.5"><BadgeCheck className="h-3 w-3" /> About the Author</Link></li>
++              </ul>
++            </div>
+             <div>
+               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Social</p>
+               <ul className="space-y-2.5 text-sm">
+-                <li><a href="https://github.com/sumit4859" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">GitHub <ArrowUpRight className="h-3 w-3" /></a></li>
++                <li><a href="https://github.com/SUMIT4859" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">GitHub <ArrowUpRight className="h-3 w-3" /></a></li>
+                 <li><a href="https://www.linkedin.com/in/sumit-kumar4859" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">LinkedIn <ArrowUpRight className="h-3 w-3" /></a></li>
+                 <li><a href="https://x.com/sumitxbt" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">Twitter / X <ArrowUpRight className="h-3 w-3" /></a></li>
+                 <li><a href="mailto:hello@codedbysumit.com" className="flex items-center gap-1.5 hover:text-foreground text-muted-foreground transition">Email <ArrowUpRight className="h-3 w-3" /></a></li>
+@@ -70,9 +83,12 @@ export default function Footer() {
+           </div>
+         </div>
+         <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Sumitkumar Pandit. Crafted with obsession.</p>
++          <p className="text-xs text-muted-foreground text-center md:text-left">
++            © {new Date().getFullYear()} Sumitkumar Pandit · codedbysumit.com. Crafted with obsession.
++            <span className="block md:inline md:ml-2 text-muted-foreground/70">Contact: <a className="underline hover:text-foreground" href="mailto:hello@codedbysumit.com">hello@codedbysumit.com</a></span>
++          </p>
+           <div className="flex items-center gap-3">
+-            <a href="https://github.com/sumit4859" target="_blank" rel="noreferrer" className="h-9 w-9 rounded-full glass flex items-center justify-center hover:bg-accent transition"><Github className="h-4 w-4" /></a>
++            <a href="https://github.com/SUMIT4859" target="_blank" rel="noreferrer" className="h-9 w-9 rounded-full glass flex items-center justify-center hover:bg-accent transition"><Github className="h-4 w-4" /></a>
+             <a href="https://www.linkedin.com/in/sumit-kumar4859" target="_blank" rel="noreferrer" className="h-9 w-9 rounded-full glass flex items-center justify-center hover:bg-accent transition"><Linkedin className="h-4 w-4" /></a>
+             <a href="https://x.com/sumitxbt" target="_blank" rel="noreferrer" className="h-9 w-9 rounded-full glass flex items-center justify-center hover:bg-accent transition"><Twitter className="h-4 w-4" /></a>
+             <a href="mailto:hello@codedbysumit.com" className="h-9 w-9 rounded-full glass flex items-center justify-center hover:bg-accent transition"><Mail className="h-4 w-4" /></a>
+diff --git a/lib/data/site.js b/lib/data/site.js
+index cd002ba..ed67328 100644
+--- a/lib/data/site.js
++++ b/lib/data/site.js
+@@ -1,57 +1,35 @@
+ export const PROJECTS = [
+   {
+-  slug: "onchain-habit-tracker",
+-  title: "Onchain Habit Tracker",
+-  tags: ["Web3", "Base", "Productivity"],
+-  description:
+-    "A decentralized habit tracking platform powered by Base blockchain. Track daily habits on-chain, build streaks, verify achievements transparently, and monitor long-term progress with real-time analytics.",
+-  stack: [
+-    "Next.js",
+-    "React",
+-    "Solidity",
+-    "Base",
+-    "Ethers.js",
+-    "Tailwind CSS"
+-  ],
+-  live: "https://onchain-habit-tracker.vercel.app/",
+-  github: "https://github.com/SUMIT4859/onchain-habit-tracker"
+-},
+-
+-{
+-  slug: "farcaster-tipjar-frame",
+-  title: "Farcaster TipJar",
+-  tags: ["Web3", "Base", "Farcaster"],
+-  description:
+-    "A decentralized Farcaster Frame that connects users to a verified TipJar smart contract on Base, enabling seamless on-chain tipping directly within the Farcaster ecosystem.",
+-  stack: [
+-    "Next.js",
+-    "Base",
+-    "Solidity",
+-    "Farcaster Frames",
+-    "Tailwind CSS"
+-  ],
+-  live: "https://farcaster-tipjar-frame.vercel.app/",
+-  github: "https://github.com/SUMIT4859/farcaster-tipjar-frame"
+-},
+-
+-{
+-  slug: "ai-exam-evaluation",
+-  title: "AI-Based Exam Evaluation System",
+-  tags: ["AI", "OCR", "NLP"],
+-  description:
+-    "An AI-powered exam evaluation platform that automatically grades subjective answer sheets using OCR, Natural Language Processing, and similarity scoring, reducing manual effort while improving evaluation accuracy.",
+-  stack: [
+-    "Python",
+-    "Streamlit",
+-    "OCR",
+-    "NLP",
+-    "Machine Learning"
+-  ],
+-  live: "https://exam-evaluation.streamlit.app/",
+-  github: "https://github.com/SUMIT4859/ai-exam-evaluation"
+-},
+-
+-    {
++    slug: "onchain-habit-tracker",
++    title: "Onchain Habit Tracker",
++    tags: ["Web3", "Base", "Productivity"],
++    description:
++      "A decentralized habit tracking platform powered by Base blockchain. Track daily habits on-chain, build streaks, verify achievements transparently, and monitor long-term progress with real-time analytics.",
++    stack: ["Next.js", "React", "Solidity", "Base", "Ethers.js", "Tailwind CSS"],
++    live: "https://onchain-habit-tracker.vercel.app/",
++    github: "https://github.com/SUMIT4859/onchain-habit-tracker"
++  },
++  {
++    slug: "farcaster-tipjar-frame",
++    title: "Farcaster TipJar",
++    tags: ["Web3", "Base", "Farcaster"],
++    description:
++      "A decentralized Farcaster Frame that connects users to a verified TipJar smart contract on Base, enabling seamless on-chain tipping directly within the Farcaster ecosystem.",
++    stack: ["Next.js", "Base", "Solidity", "Farcaster Frames", "Tailwind CSS"],
++    live: "https://farcaster-tipjar-frame.vercel.app/",
++    github: "https://github.com/SUMIT4859/farcaster-tipjar-frame"
++  },
++  {
++    slug: "ai-exam-evaluation",
++    title: "AI-Based Exam Evaluation System",
++    tags: ["AI", "OCR", "NLP"],
++    description:
++      "An AI-powered exam evaluation platform that automatically grades subjective answer sheets using OCR, Natural Language Processing, and similarity scoring, reducing manual effort while improving evaluation accuracy.",
++    stack: ["Python", "Streamlit", "OCR", "NLP", "Machine Learning"],
++    live: "https://exam-evaluation.streamlit.app/",
++    github: "https://github.com/SUMIT4859/ai-exam-evaluation"
++  },
++  {
+     slug: 'multiplayer-bingo',
+     title: 'Multiplayer Bingo',
+     tags: ['Game', 'Next.js', 'Socket.IO'],
+@@ -92,12 +70,38 @@ export const TIMELINE = [
+   { year: '2024 - Present', title: 'Building in Public', meta: 'Open Source', desc: 'Shipping dApps, AI agents and developer tools on GitHub @sumit4859.' },
+ ];
+ 
+-export const TESTIMONIALS = [
+-  { name: 'Aarav Mehta', role: 'CTO, FinEdge Labs', quote: 'Sumit delivered our dApp 2 weeks ahead of schedule. Clean code, sharp UI - the kind of engineer you keep on speed dial.' },
+-  { name: 'Priya Shah', role: 'Founder, NimbusAI', quote: 'He took our vague AI idea and turned it into a production product. The man ships.' },
+-  { name: 'Ravi Sharma', role: 'Lead Architect, ChainOps', quote: 'Best Solidity engineer I have hired this year. Pragmatic, fast, and shockingly thorough on security.' },
++// TRUST PILLARS (replaces fake testimonials).
++// Honest, verifiable value-props that make Brevo (and other reviewers) trust the site.
++export const TRUST_PILLARS = [
++  {
++    title: 'Written by a real engineer',
++    desc: 'Every guide, review and tool is written by Sumitkumar Pandit - a working full-stack developer publishing under his real name, real domain, real GitHub.',
++    icon: 'BadgeCheck',
++    accent: 'emerald',
++  },
++  {
++    title: 'No fake testimonials, ever',
++    desc: 'This site has zero fabricated social proof. When we say something works, it is because we actually shipped with it - not because a paid quote said so.',
++    icon: 'ShieldCheck',
++    accent: 'purple',
++  },
++  {
++    title: 'Transparent affiliate policy',
++    desc: 'Some links are affiliate links. They never change our opinion, and every review page carries a visible disclosure with a link to our full affiliate policy.',
++    icon: 'FileText',
++    accent: 'amber',
++  },
++  {
++    title: 'Free tools that actually work',
++    desc: '4 in-browser tools - Spam Score, Send-Time Calculator, HTML Preview, Subject Line Generator. No signup, no email wall, no dark patterns.',
++    icon: 'Wrench',
++    accent: 'cyan',
++  },
+ ];
+ 
++// Kept as empty array for backward-compatibility with existing imports.
++export const TESTIMONIALS = [];
++
+ export const TOOLS = [
+   {
+     slug: 'brevo',
+@@ -111,76 +115,13 @@ export const TOOLS = [
+     brand: '#0B996E',
+     featured: true,
+   },
+-  {
+-    slug: 'github',
+-    name: 'GitHub',
+-    category: 'Developer Tools',
+-    tagline: 'Where the world builds software - code, collaborate, ship.',
+-    rating: 4.9,
+-    color: 'from-zinc-500/20 to-zinc-500/0',
+-    logo: 'G',
+-    logoImage: '/logos/github.png',
+-  },
+-  {
+-    slug: 'vercel',
+-    name: 'Vercel',
+-    category: 'Hosting',
+-    tagline: 'The frontend cloud - zero-config deploys for Next.js & beyond.',
+-    rating: 4.9,
+-    color: 'from-zinc-500/20 to-zinc-500/0',
+-    logo: 'V',
+-    logoImage: '/logos/vercel.svg',
+-  },
+-  {
+-    slug: 'mongodb-atlas',
+-    name: 'MongoDB Atlas',
+-    category: 'Cloud Platforms',
+-    tagline: 'Fully-managed MongoDB in the cloud. Scale globally with ease.',
+-    rating: 4.6,
+-    color: 'from-green-500/20 to-green-500/0',
+-    logo: 'M',
+-    logoImage: '/logos/MongoDB.svg',
+-  },
+-  {
+-    slug: 'cloudflare',
+-    name: 'Cloudflare',
+-    category: 'Cloud Platforms',
+-    tagline: 'Global edge network - performance, security & developer tools.',
+-    rating: 4.8,
+-    color: 'from-orange-500/20 to-orange-500/0',
+-    logo: 'C',
+-    logoImage: '/logos/Cloudflare.svg',
+-  },
+-  {
+-    slug: 'namecheap',
+-    name: 'Namecheap',
+-    category: 'Domains',
+-    tagline: 'Affordable domains & hosting - trusted by 17M+ customers.',
+-    rating: 4.4,
+-    color: 'from-orange-500/20 to-orange-500/0',
+-    logo: 'N',
+-    logoImage: '/logos/namecheap.png',
+-  },
+-  {
+-    slug: 'vscode',
+-    name: 'VS Code',
+-    category: 'Developer Tools',
+-    tagline: "The world's most popular code editor. Extensible & free.",
+-    rating: 4.9,
+-    color: 'from-blue-500/20 to-blue-500/0',
+-    logo: 'VS',
+-    logoImage: '/logos/vscode.svg',
+-  },
+-  {
+-    slug: 'postman',
+-    name: 'Postman',
+-    category: 'Developer Tools',
+-    tagline: 'API platform for building & testing - design, test, automate.',
+-    rating: 4.7,
+-    color: 'from-orange-500/20 to-orange-500/0',
+-    logo: 'P',
+-    logoImage: '/logos/postman.png',
+-  },
++  { slug: 'github', name: 'GitHub', category: 'Developer Tools', tagline: 'Where the world builds software - code, collaborate, ship.', rating: 4.9, color: 'from-zinc-500/20 to-zinc-500/0', logo: 'G', logoImage: '/logos/github.png' },
++  { slug: 'vercel', name: 'Vercel', category: 'Hosting', tagline: 'The frontend cloud - zero-config deploys for Next.js & beyond.', rating: 4.9, color: 'from-zinc-500/20 to-zinc-500/0', logo: 'V', logoImage: '/logos/vercel.svg' },
++  { slug: 'mongodb-atlas', name: 'MongoDB Atlas', category: 'Cloud Platforms', tagline: 'Fully-managed MongoDB in the cloud. Scale globally with ease.', rating: 4.6, color: 'from-green-500/20 to-green-500/0', logo: 'M', logoImage: '/logos/MongoDB.svg' },
++  { slug: 'cloudflare', name: 'Cloudflare', category: 'Cloud Platforms', tagline: 'Global edge network - performance, security & developer tools.', rating: 4.8, color: 'from-orange-500/20 to-orange-500/0', logo: 'C', logoImage: '/logos/Cloudflare.svg' },
++  { slug: 'namecheap', name: 'Namecheap', category: 'Domains', tagline: 'Affordable domains & hosting - trusted by 17M+ customers.', rating: 4.4, color: 'from-orange-500/20 to-orange-500/0', logo: 'N', logoImage: '/logos/namecheap.png' },
++  { slug: 'vscode', name: 'VS Code', category: 'Developer Tools', tagline: "The world's most popular code editor. Extensible & free.", rating: 4.9, color: 'from-blue-500/20 to-blue-500/0', logo: 'VS', logoImage: '/logos/vscode.svg' },
++  { slug: 'postman', name: 'Postman', category: 'Developer Tools', tagline: 'API platform for building & testing - design, test, automate.', rating: 4.7, color: 'from-orange-500/20 to-orange-500/0', logo: 'P', logoImage: '/logos/postman.png' },
+ ];
+ 
+ export const TOOL_CATEGORIES = ['All', 'Email Marketing', 'Hosting', 'Domains', 'Developer Tools', 'Cloud Platforms', 'AI Tools', 'Productivity'];
+diff --git a/tailwind.config.js b/tailwind.config.js
+index ff50f5e..bf4443f 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -1,102 +1,84 @@
+ /** @type {import('tailwindcss').Config} */
+ module.exports = {
+-    darkMode: ["class"],
+-    content: [
+-      './pages/**/*.{js,jsx}',
+-      './components/**/*.{js,jsx}',
+-      './app/**/*.{js,jsx}',
+-      './src/**/*.{js,jsx}',
+-    ],
+-    prefix: "",
+-    theme: {
+-      container: {
+-        center: true,
+-        padding: '2rem',
+-        screens: {
+-          '2xl': '1400px'
+-        }
+-      },
+-      extend: {
+-        colors: {
+-          border: 'hsl(var(--border))',
+-          input: 'hsl(var(--input))',
+-          ring: 'hsl(var(--ring))',
+-          background: 'hsl(var(--background))',
+-          foreground: 'hsl(var(--foreground))',
+-          primary: {
+-            DEFAULT: 'hsl(var(--primary))',
+-            foreground: 'hsl(var(--primary-foreground))'
+-          },
+-          secondary: {
+-            DEFAULT: 'hsl(var(--secondary))',
+-            foreground: 'hsl(var(--secondary-foreground))'
+-          },
+-          destructive: {
+-            DEFAULT: 'hsl(var(--destructive))',
+-            foreground: 'hsl(var(--destructive-foreground))'
+-          },
+-          muted: {
+-            DEFAULT: 'hsl(var(--muted))',
+-            foreground: 'hsl(var(--muted-foreground))'
+-          },
+-          accent: {
+-            DEFAULT: 'hsl(var(--accent))',
+-            foreground: 'hsl(var(--accent-foreground))'
+-          },
+-          popover: {
+-            DEFAULT: 'hsl(var(--popover))',
+-            foreground: 'hsl(var(--popover-foreground))'
+-          },
+-          card: {
+-            DEFAULT: 'hsl(var(--card))',
+-            foreground: 'hsl(var(--card-foreground))'
+-          },
+-          chart: {
+-            '1': 'hsl(var(--chart-1))',
+-            '2': 'hsl(var(--chart-2))',
+-            '3': 'hsl(var(--chart-3))',
+-            '4': 'hsl(var(--chart-4))',
+-            '5': 'hsl(var(--chart-5))'
+-          },
+-          sidebar: {
+-            DEFAULT: 'hsl(var(--sidebar-background))',
+-            foreground: 'hsl(var(--sidebar-foreground))',
+-            primary: 'hsl(var(--sidebar-primary))',
+-            'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+-            accent: 'hsl(var(--sidebar-accent))',
+-            'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+-            border: 'hsl(var(--sidebar-border))',
+-            ring: 'hsl(var(--sidebar-ring))'
+-          }
++  darkMode: ["class"],
++  content: [
++    './pages/**/*.{js,jsx}',
++    './components/**/*.{js,jsx}',
++    './app/**/*.{js,jsx}',
++    './src/**/*.{js,jsx}',
++  ],
++  prefix: "",
++  theme: {
++    container: {
++      center: true,
++      padding: '2rem',
++      screens: { '2xl': '1400px' }
++    },
++    extend: {
++      colors: {
++        border: 'hsl(var(--border))',
++        input: 'hsl(var(--input))',
++        ring: 'hsl(var(--ring))',
++        background: 'hsl(var(--background))',
++        foreground: 'hsl(var(--foreground))',
++        primary: {
++          DEFAULT: 'hsl(var(--primary))',
++          foreground: 'hsl(var(--primary-foreground))'
++        },
++        secondary: {
++          DEFAULT: 'hsl(var(--secondary))',
++          foreground: 'hsl(var(--secondary-foreground))'
++        },
++        destructive: {
++          DEFAULT: 'hsl(var(--destructive))',
++          foreground: 'hsl(var(--destructive-foreground))'
++        },
++        muted: {
++          DEFAULT: 'hsl(var(--muted))',
++          foreground: 'hsl(var(--muted-foreground))'
++        },
++        accent: {
++          DEFAULT: 'hsl(var(--accent))',
++          foreground: 'hsl(var(--accent-foreground))'
+         },
+-        borderRadius: {
+-          lg: 'var(--radius)',
+-          md: 'calc(var(--radius) - 2px)',
+-          sm: 'calc(var(--radius) - 4px)'
++        popover: {
++          DEFAULT: 'hsl(var(--popover))',
++          foreground: 'hsl(var(--popover-foreground))'
+         },
+-        keyframes: {
+-          'accordion-down': {
+-            from: {
+-              height: '0'
+-            },
+-            to: {
+-              height: 'var(--radix-accordion-content-height)'
+-            }
+-          },
+-          'accordion-up': {
+-            from: {
+-              height: 'var(--radix-accordion-content-height)'
+-            },
+-            to: {
+-              height: '0'
+-            }
+-          }
++        card: {
++          DEFAULT: 'hsl(var(--card))',
++          foreground: 'hsl(var(--card-foreground))'
+         },
+-        animation: {
+-          'accordion-down': 'accordion-down 0.2s ease-out',
+-          'accordion-up': 'accordion-up 0.2s ease-out'
+-        }
++        brand: {
++          emerald: 'hsl(var(--brand-emerald))',
++          purple:  'hsl(var(--brand-purple))',
++          amber:   'hsl(var(--brand-amber))',
++          cyan:    'hsl(var(--brand-cyan))',
++          pink:    'hsl(var(--brand-pink))',
++          blue:    'hsl(var(--brand-blue))',
++        },
++        chart: {
++          '1': 'hsl(var(--chart-1))',
++          '2': 'hsl(var(--chart-2))',
++          '3': 'hsl(var(--chart-3))',
++          '4': 'hsl(var(--chart-4))',
++          '5': 'hsl(var(--chart-5))'
++        },
++      },
++      borderRadius: {
++        lg: 'var(--radius)',
++        md: 'calc(var(--radius) - 2px)',
++        sm: 'calc(var(--radius) - 4px)'
++      },
++      keyframes: {
++        'accordion-down': { from: { height: '0' }, to: { height: 'var(--radix-accordion-content-height)' } },
++        'accordion-up':   { from: { height: 'var(--radix-accordion-content-height)' }, to: { height: '0' } }
++      },
++      animation: {
++        'accordion-down': 'accordion-down 0.2s ease-out',
++        'accordion-up': 'accordion-up 0.2s ease-out'
+       }
+-    },
+-    plugins: [require("tailwindcss-animate")],
+-  }
+\ No newline at end of file
++    }
++  },
++  plugins: [require("tailwindcss-animate")],
++}
+-- 
+2.39.5
+
