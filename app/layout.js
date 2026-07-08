@@ -12,7 +12,7 @@ import { Analytics } from "@vercel/analytics/react";
 import ClarityProvider from "@/components/Clarity";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://codedbysumit.com';
+const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.codedbysumit.com';
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),

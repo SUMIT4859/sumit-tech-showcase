@@ -6,7 +6,7 @@ import { TEMPLATES } from '@/lib/data/templates';
 import { RESOURCES } from '@/lib/data/resources';
 
 export default function sitemap() {
-  const base = process.env.NEXT_PUBLIC_BASE_URL || 'https://codedbysumit.com';
+  const base = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.codedbysumit.com';
   const now = new Date();
   const route = (path, priority = 0.7, freq = 'weekly') => ({ url: `${base}${path}`, lastModified: now, changeFrequency: freq, priority });
 

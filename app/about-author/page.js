@@ -14,7 +14,7 @@ export default function AboutAuthorPage() {
     '@type': 'Person',
     name: 'Sumitkumar Pandit',
     jobTitle: 'Full Stack Developer, AI Engineer, Web3 Developer',
-    url: 'https://codedbysumit.com/about-author',
+    url: 'https://www.codedbysumit.com/about-author',
     email: 'hello@codedbysumit.com',
     sameAs: [
       'https://github.com/SUMIT4859',
