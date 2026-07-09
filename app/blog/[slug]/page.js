@@ -36,12 +36,97 @@ function Block({ block }) {
   if (block.type === 'quote') return (
     <blockquote className="my-8 pl-6 border-l-2 border-foreground italic text-xl text-foreground/90 font-display">{block.text}</blockquote>
   );
-  if (block.type === 'code') return (
-    <pre className="my-6 p-5 rounded-2xl bg-foreground/5 border border-border overflow-x-auto text-sm font-mono leading-relaxed">
-      {block.lang && <div className="text-xs uppercase tracking-widest text-muted-foreground mb-3">{block.lang}</div>}
-      <code className="text-foreground/90">{block.text}</code>
-    </pre>
-  );
+if (block.type === 'code') return (
+  <pre className="my-6 p-5 rounded-2xl bg-foreground/5 border border-border overflow-x-auto text-sm font-mono leading-relaxed">
+    {(block.language || block.lang) && (
+      <div className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
+        {block.language || block.lang}
+      </div>
+    )}
+
+    <code className="text-foreground whitespace-pre-wrap">
+      {block.code || block.text}
+    </code>
+  </pre>
+);
+  if (block.type === 'faq') return (
+  <div className="space-y-4 my-8">
+    {block.items.map((item, i) => (
+      <details
+        key={i}
+        className="rounded-xl border border-border bg-foreground/5 p-5 group"
+      >
+        <summary className="cursor-pointer font-semibold text-lg">
+          {item.q}
+        </summary>
+
+        <p className="mt-3 text-muted-foreground leading-relaxed">
+          {item.a}
+        </p>
+      </details>
+    ))}
+  </div>
+);
+
+if (block.type === 'links') return (
+  <div className="grid gap-3 my-8">
+    {block.items.map((item, i) => (
+      <Link
+        key={i}
+        href={item.href}
+        className="rounded-xl border border-border p-4 hover:bg-accent transition"
+      >
+        {item.title}
+      </Link>
+    ))}
+  </div>
+);
+
+if (block.type === 'ol') return (
+  <ol className="list-decimal pl-6 space-y-2 my-6">
+    {block.items.map((item, i) => (
+      <li key={i} className="text-muted-foreground">
+        {item}
+      </li>
+    ))}
+  </ol>
+);
+
+if (block.type === 'table') return (
+  <div className="overflow-x-auto my-8">
+    <table className="w-full border border-border">
+      <thead>
+        <tr>
+          {block.headers.map((h, i) => (
+            <th
+              key={i}
+              className="border border-border p-3 text-left font-semibold"
+            >
+              {h}
+            </th>
+          ))}
+        </tr>
+      </thead>
+
+      <tbody>
+        {block.rows.map((row, i) => (
+          <tr key={i}>
+            {row.map((cell, j) => (
+              <td
+                key={j}
+                className="border border-border p-3"
+              >
+                {cell}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+
   return null;
 }
 
