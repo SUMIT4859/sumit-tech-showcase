@@ -22,7 +22,7 @@ const TOC = [
   { id: 'who-should-use', label: 'Who Should Use It' },
   { id: 'experience', label: 'My Experience' },
   { id: 'pros-cons', label: 'Pros & Cons' },
-  { id: 'screenshots', label: 'From My Dashboard' },
+ // { id: 'screenshots', label: 'From My Dashboard' },
   { id: 'faq', label: 'FAQ' },
   { id: 'related', label: 'Related Articles' },
 ];
@@ -32,12 +32,12 @@ const TOC = [
 // /public/brevo/sending-stats.png, /public/brevo/automation.png and this section renders them.
 // Until you upload real screenshots, this section shows a labelled "coming soon after real usage" state
 // which is FAR safer for reviewers than obvious "Screenshot placeholder" boxes.
-const SCREENSHOTS = [
+/*const SCREENSHOTS = [
   { file: '/brevo/dashboard.png',       label: 'Main dashboard \u00b7 sending overview',    caption: 'Where I check daily volume, opens and bounces.' },
   { file: '/brevo/template-editor.png', label: 'Template editor \u00b7 drag-and-drop',      caption: 'Used to build the welcome email for my side-project.' },
   { file: '/brevo/sending-stats.png',   label: 'Sending statistics \u00b7 30-day view',     caption: 'Delivery rate + open rate for transactional traffic.' },
   { file: '/brevo/automation.png',      label: 'Automation workflow \u00b7 welcome series', caption: 'Two-step onboarding automation I run in production.' },
-];
+];*/
 
 const FEATURES = [
   { Icon: Mail, title: 'Email Marketing', desc: 'Drag-and-drop builder, segmentation, A/B tests, deliverability tooling.' },
@@ -341,7 +341,7 @@ export default function BrevoPage({ tool }) {
                 </div>
               </div>
             </Section>
-            <Section id="screenshots">
+            {/* <Section id="screenshots">
               <H2>From My Brevo Dashboard</H2>
               <p className="text-muted-foreground mb-6">These are the exact views I use week to week. I keep them updated as Brevo ships UI changes so this review does not fossilize.</p>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -351,7 +351,7 @@ export default function BrevoPage({ tool }) {
                   return (
                     <div key={s.file} className="glass-card rounded-2xl p-3 group">
                       <div className="relative aspect-video rounded-xl overflow-hidden border border-border flex items-center justify-center" style={{ background: `linear-gradient(135deg, hsl(var(--brand-${acc}) / 0.18), hsl(var(--brand-${acc}) / 0.05))` }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        eslint-disable-next-line @next/next/no-img-element 
                         <img
                           src={s.file}
                           alt={s.label}
@@ -374,7 +374,7 @@ export default function BrevoPage({ tool }) {
                 })}
               </div>
               <p className="text-xs text-muted-foreground mt-4 flex items-center gap-1.5"><AlertCircle className="h-3.5 w-3.5" /> Screenshots are from my personal Brevo account. Drop your files at <code className="font-mono">/public/brevo/</code> to publish them.</p>
-            </Section>
+            </Section> */}
 
             <Section id="faq">
               <H2>Frequently Asked Questions</H2>
